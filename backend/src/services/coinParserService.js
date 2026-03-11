@@ -1,3 +1,5 @@
+const coinPatterns = require("../config/coinPatterns.json");
+
 const forbiddenPatterns = [
     {
         type: "plating_or_base_metal",
@@ -133,11 +135,14 @@ const tokenize = (normalizedTitle) => {
 // Step 3 - Extract basics signals (coin, metal, weight, year)
 
 const extractCoin = (tokens) => {
-    let coin = null;
-    if (tokens.includes('maple') && tokens.includes('leaf')) {
-        coin = 'maple leaf';
+    for (const coinPattern of coinPatterns) {
+        for (const alias of coinPattern.aliases) {
+            if (alias.every(word => tokens.includes(word))) {
+                return coinPattern.name;
+            }
+        }
     }
-    return coin;
+    return null;
 }
 
 const extractMetal = (tokens) => {
@@ -149,14 +154,16 @@ const extractMetal = (tokens) => {
 
 const extractWeight = (tokens) => {
     const ozIndex = tokens.indexOf('oz');
-    const weight = null;
+
     if (ozIndex > 0) {
         const weightToken = tokens[ozIndex - 1];
+
         if (!isNaN(weightToken)) {
-            weight = `${weightToken} oz`;
+            return `${weightToken} oz`;
         }
     }
-    return weight;
+
+    return null;
 }
 
 const extractYear = (tokens) => {
