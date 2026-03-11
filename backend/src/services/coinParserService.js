@@ -113,38 +113,63 @@ const forbiddenPatterns = [
     }
 ];
 
-const parseCoinTitle = (title) => {
-    const normalizedTitle = title.toLowerCase().replace(/[-_/]/g, ' ').replace(/(\d+)oz\b/g, '$1 oz').replace(/\s+/g, ' ').trim();
-    const tokens = normalizedTitle.split(' ');
+// Step 1 — Normalize title
 
+const normalizeTitle = (title) => {
+    return title
+        .toLowerCase()
+        .replace(/[-_/]/g, ' ')
+        .replace(/(\d+)oz\b/g, '$1 oz')
+        .replace(/\s+/g, ' ')
+        .trim();
+};
+
+// Step 2 - Tokenize
+
+const tokenize = (normalizedTitle) => {
+    return normalizedTitle.split(' ')
+};
+
+// Step 3 - Extract basics signals (coin, metal, weight, year)
+
+const extractCoin = (tokens) => {
     let coin = null;
     if (tokens.includes('maple') && tokens.includes('leaf')) {
         coin = 'maple leaf';
     }
+    return coin;
+}
 
-    let metal = null;
+const extractMetal = (tokens) => {
     if (tokens.includes('silver')) {
-        metal = 'silver';
+        return 'silver';
     }
+    return null;
+}
 
+const extractWeight = (tokens) => {
     const ozIndex = tokens.indexOf('oz');
-
-    let weight = null;
+    const weight = null;
     if (ozIndex > 0) {
         const weightToken = tokens[ozIndex - 1];
         if (!isNaN(weightToken)) {
             weight = `${weightToken} oz`;
         }
     }
+    return weight;
+}
 
-    let year = tokens.find(token => {
+const extractYear = (tokens) => {
+    return tokens.find(token => {
         const num = Number(token);
         return num >= 1900 && num <= 2100;
     }) || null;
+}
 
+// Step 4 - Detect forbidden patterns
 
-
-    const detectedPatterns = forbiddenPatterns.map(pattern => {
+const detectPatterns = (tokens) => {
+    return forbiddenPatterns.map(pattern => {
         const matchedWords = pattern.words.filter(word => tokens.includes(word));
         return matchedWords.length > 0 ? {
             type: pattern.type,
@@ -152,7 +177,11 @@ const parseCoinTitle = (title) => {
             matchedWords
         } : null;
     }).filter(Boolean);
+}
 
+// Step 5 - Classify status (rejected, accepted_non_standard, accepted_standard)
+
+const classifyPatterns = (detectedPatterns) => {
     const rejectedPatterns = detectedPatterns.filter(
         pattern => pattern.severity === "hard_reject"
     );
@@ -161,8 +190,13 @@ const parseCoinTitle = (title) => {
         pattern => pattern.severity === "coin_non_standard"
     );
 
-    const rejectedWords = rejectedPatterns.flatMap(pattern => pattern.matchedWords);
-    const nonStandardWords = nonStandardPatterns.flatMap(pattern => pattern.matchedWords);
+    const rejectedWords = rejectedPatterns.flatMap(
+        pattern => pattern.matchedWords
+    );
+
+    const nonStandardWords = nonStandardPatterns.flatMap(
+        pattern => pattern.matchedWords
+    );
 
     let status = "accepted_standard";
 
@@ -171,6 +205,40 @@ const parseCoinTitle = (title) => {
     } else if (nonStandardPatterns.length > 0) {
         status = "accepted_non_standard";
     }
+
+    return {
+        status,
+        rejectedPatterns,
+        rejectedWords,
+        nonStandardPatterns,
+        nonStandardWords
+    };
+};
+
+
+
+const parseCoinTitle = (title) => {
+
+    const normalizedTitle = normalizeTitle(title);
+
+    const tokens = tokenize(normalizedTitle);
+
+    const coin = extractCoin(tokens);
+
+    const metal = extractMetal(tokens);
+
+    const weight = extractWeight(tokens);
+
+    const year = extractYear(tokens);
+
+    const detectedPatterns = detectPatterns(tokens);
+
+    const { status,
+        rejectedPatterns,
+        rejectedWords,
+        nonStandardPatterns,
+        nonStandardWords
+    } = classifyPatterns(detectedPatterns);
 
     return {
         rawTitle: title,
