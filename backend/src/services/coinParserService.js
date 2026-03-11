@@ -1,120 +1,6 @@
 const coinPatterns = require("../config/coinPatterns.json");
 const metalPatterns = require("../config/metalPatterns.json");
-
-const forbiddenPatterns = [
-    {
-        type: "plating_or_base_metal",
-        severity: "hard_reject",
-        words: [
-            "plated",
-            "clad",
-            "layered",
-            "coated",
-            "zinc",
-            "alloy"
-        ]
-    },
-    {
-        type: "replica_copy",
-        severity: "hard_reject",
-        words: [
-            "replica",
-            "copy",
-            "reproduction",
-            "imitation",
-            "tribute",
-            "fantasy"
-        ]
-    },
-    {
-        type: "private_finish_modified_bullion",
-        severity: "hard_reject",
-        words: [
-            "ruthenium",
-            "gilded",
-            "colorized",
-            "coloured",
-            "colored",
-            "holographic",
-            "antiqued",
-            "enameled",
-            "enamelled",
-            "glow"
-        ]
-    },
-    {
-        type: "collector_proof_or_graded",
-        severity: "coin_non_standard",
-        words: [
-            "proof",
-            "reverse",
-            "pf70",
-            "pr70",
-            "ms70",
-            "ngc",
-            "pcgs",
-            "anacs",
-            "dcam",
-            "cameo",
-            "slab"
-        ]
-    },
-    {
-        type: "bulk_or_non_unitary_sale",
-        severity: "hard_reject",
-        words: [
-            "lot",
-            "roll",
-            "tube",
-            "set",
-            "monster",
-            "coins",
-            "x2",
-            "x3",
-            "x5",
-            "x10"
-        ]
-    },
-    {
-        type: "packaging_or_marketing_accessories",
-        severity: "coin_non_standard",
-        words: [
-            "coa",
-            "certificate",
-            "box",
-            "case",
-            "display",
-            "capsule",
-            "booklet",
-            "folder"
-        ]
-    },
-    {
-        type: "non_coin_novelty",
-        severity: "hard_reject",
-        words: [
-            "challenge",
-            "souvenir",
-            "token",
-            "medallion",
-            "medal",
-            "novelty",
-            "prop"
-        ]
-    },
-    {
-        type: "special_marks_or_privy",
-        severity: "coin_non_standard",
-        words: [
-            "privy",
-            "ram",
-            "heart",
-            "ufo",
-            "grim",
-            "armageddon"
-        ]
-    }
-];
+const forbiddenPatterns = require("../config/forbiddenPatterns.json");
 
 // Step 1 — Normalize title
 
@@ -129,9 +15,7 @@ const normalizeTitle = (title) => {
 
 // Step 2 - Tokenize
 
-const tokenize = (normalizedTitle) => {
-    return normalizedTitle.split(' ')
-};
+const tokenize = (normalizedTitle) => normalizedTitle.split(' ');
 
 // Step 3 - Extract basics signals (coin, metal, weight, year)
 
