@@ -7,8 +7,19 @@ const forbiddenPatterns = require("../config/forbiddenPatterns.json");
 const normalizeTitle = (title) => {
     return title
         .toLowerCase()
-        .replace(/[-_/]/g, ' ')
+
+        // separate numbers and oz
         .replace(/(\d+)oz\b/g, '$1 oz')
+
+        // normalize separators
+        .replace(/[-_/]/g, ' ')
+
+        // fix common merged words
+        .replace(/mapleleaf/g, 'maple leaf')
+        .replace(/silvermaple/g, 'silver maple')
+        .replace(/goldmaple/g, 'gold maple')
+
+        // collapse multiple spaces
         .replace(/\s+/g, ' ')
         .trim();
 };
