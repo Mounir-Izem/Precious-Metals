@@ -1,4 +1,5 @@
 const coinPatterns = require("../config/coinPatterns.json");
+const metalPatterns = require("../config/metalPatterns.json");
 
 const forbiddenPatterns = [
     {
@@ -146,8 +147,12 @@ const extractCoin = (tokens) => {
 }
 
 const extractMetal = (tokens) => {
-    if (tokens.includes('silver')) {
-        return 'silver';
+    for (const metalPattern of metalPatterns) {
+        for (const alias of metalPattern.aliases) {
+            if (alias.every(word => tokens.includes(word))) {
+                return metalPattern.name;
+            }
+        }
     }
     return null;
 }

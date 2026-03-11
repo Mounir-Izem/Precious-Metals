@@ -1,0 +1,29 @@
+[
+  {
+    "name": "silver",
+    "aliases": [
+      ["silver"],
+      ["fine", "silver"],
+      [".999", "silver"],
+      [".9999", "silver"],
+      ["ag"]
+    ]
+  },
+  {
+    "name": "gold",
+    "aliases": [
+      ["gold"],
+      ["fine", "gold"],
+      [".999", "gold"],
+      [".9999", "gold"],
+      ["au"]
+    ]
+  },
+  {
+    "name": "platinum",
+    "aliases": [
+      ["platinum"],
+      ["pt"]
+    ]
+  }
+]
