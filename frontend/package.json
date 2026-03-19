@@ -1,0 +1,20 @@
+{
+  "name": "precious-metals-frontend",
+  "version": "0.1.0",
+  "description": "React client for precious metals spot price tracking",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "gold",
+    "silver",
+    "precious",
+    "metals",
+    "spot",
+    "price",
+    "LBMA"
+  ],
+  "author": "Mounir Izem",
+  "license": "MIT"
+}

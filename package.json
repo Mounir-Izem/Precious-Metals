@@ -1,0 +1,27 @@
+{
+  "name": "precious-metals",
+  "version": "0.1.0",
+  "description": "gold/silver tracker",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "gold",
+    "silver",
+    "precious",
+    "metals",
+    "spot",
+    "price",
+    "LBMA"
+  ],
+  "author": "Mounir Izem",
+  "license": "MIT",
+
+  "workspaces": [
+    "backend",
+    "frontend"
+  ]
+}
+
+
