@@ -12,3 +12,24 @@ datasource db {
   provider = "postgresql"
   url = env("DATABASE_URL")
 }
+
+enum Fixing {
+  AM
+  PM
+}
+
+enum Metal {
+  gold
+  silver
+}
+
+model SpotPrice {
+  id Int @id @default(autoincrement())
+  metal Metal
+  fixing Fixing
+  oz_price_usd Decimal
+  usd_to_eur Decimal
+  usd_to_gbp Decimal
+  date DateTime
+  created_at DateTime @default(now())
+}
