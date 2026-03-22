@@ -1,5 +1,6 @@
 const express = require('express');
-const {router} = require('./routes/health.js');
+const {router: healthRouter} = require('./routes/health.js');
+const {router: spotRouter} = require('./routes/spot.js')
 
 
 const port = process.env.PORT || 3000;
@@ -10,4 +11,6 @@ app.listen(port, () => {
     console.log(`Serveur runing on port ${port}`)
 });
 
-app.use('/health', router);
+app.use('/health', healthRouter);
+
+app.use('/spot', spotRouter);
