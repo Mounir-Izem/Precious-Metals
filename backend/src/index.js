@@ -1,6 +1,7 @@
 const express = require('express');
 const {router: healthRouter} = require('./routes/health.js');
 const {router: spotRouter} = require('./routes/spot.js')
+require('./crons/spotCron.js');
 
 
 const port = process.env.PORT || 3000;
