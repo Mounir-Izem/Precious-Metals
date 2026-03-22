@@ -1,8 +1,8 @@
 const {getSpotPrices} = require('../services/spotService.js');
 
-const getSpot = (_req, res) => {
+const getSpot = async (_req, res) => {
     try {
-        const result = getSpotPrices();
+        const result = await getSpotPrices();
         res.json(result);
     } catch (error) {
         res.status(500).json({'status': 'error acces spot'});
