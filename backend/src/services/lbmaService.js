@@ -5,7 +5,7 @@ const mockData = require('../mock/spotPrice.json');
 const normalizeData = () => {
     const metalPrices = mockData.metals;
     const currencyRates = mockData.currencies;
-    const date = mockData.timestamp.split('T')[0];
+    const date = new Date(mockData.timestamp.split('T')[0]);
     const data = [
         {metal: 'gold', fixing: 'AM', oz_price_usd: metalPrices.lbma_gold_am, usd_to_eur: currencyRates.EUR,
             usd_to_gbp: currencyRates.GBP, date: date

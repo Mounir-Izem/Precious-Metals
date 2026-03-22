@@ -1,7 +1,14 @@
+const prisma = require('../db.js');
 const { normalizeData } = require('./lbmaService.js');
 
-const getSpotPrices = () => {
-    return normalizeData()
+const getSpotPrices = async () => {
+    const getData = await prisma.spotPrice.findMany()
+    return getData
 }
 
-module.exports = {getSpotPrices};
+const saveSpotPrice = async () => {
+    const data = normalizeData()
+    await prisma.spotPrice.createMany({data: data})
+}
+
+module.exports = {getSpotPrices, saveSpotPrice};
