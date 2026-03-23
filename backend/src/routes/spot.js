@@ -4,5 +4,6 @@ const spotController = require('../controllers/spotController.js');
 
 router.get('/', spotController.getSpot);
 router.get('/variation', spotController.getLatestSpot)
+router.get('/latest', spotController.getTodaySpot)
 
 module.exports = { router };
