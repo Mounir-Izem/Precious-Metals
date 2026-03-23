@@ -27,8 +27,8 @@ model SpotPrice {
   metal Metal
   fixing Fixing
   oz_price_usd Decimal
-  usd_to_eur Decimal
-  usd_to_gbp Decimal
+  eur_usd_rate Decimal
+  gbp_usd_rate Decimal
   date DateTime
   created_at DateTime @default(now())
 }
