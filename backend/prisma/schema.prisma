@@ -31,4 +31,5 @@ model SpotPrice {
   gbp_usd_rate Decimal
   date DateTime
   created_at DateTime @default(now())
+  @@unique([metal, fixing, date])
 }
