@@ -2,7 +2,7 @@ const mockData = require('../mock/spotPrice.json');
 
 
 
-const normalizeData = () => {
+const normalizeData = (fixing) => {
     const metalPrices = mockData.metals;
     const currencyRates = mockData.currencies;
     const date = new Date(mockData.timestamp.split('T')[0]);
@@ -18,8 +18,11 @@ const normalizeData = () => {
             gbp_usd_rate: currencyRates.GBP, date: date
         }
     ]
+    if (fixing !== 'AM' && fixing !== 'PM') {
+        return null
+    }
+    return data.filter(n => n.fixing === fixing) ;
 
-    return data
 }
 
 module.exports = {normalizeData};

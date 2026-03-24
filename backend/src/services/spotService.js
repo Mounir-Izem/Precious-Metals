@@ -1,14 +1,20 @@
 const prisma = require('../db.js');
 const { normalizeData } = require('./lbmaService.js');
 
-const getSpotPrices = async () => {
-    const getData = await prisma.spotPrice.findMany()
-    return getData
-}
+const saveSpotPrice = async (fixing) => {
+    try {
+        const data = normalizeData(fixing)
+        if (!data) {
+            return null
+        }
+        await prisma.spotPrice.createMany({
+            data: data,
+            skipDuplicates: true
+        })
+    } catch (error) {
+        console.error(error)
+    }
 
-const saveSpotPrice = async () => {
-    const data = normalizeData()
-    await prisma.spotPrice.createMany({ data: data })
 }
 
 const getLatestForMetal = async (metal, fixing) => {
@@ -19,7 +25,7 @@ const getLatestForMetal = async (metal, fixing) => {
             take: 2
         })
     } catch (error) {
-        console.error('error with db')
+        console.error(error)
     }
 
 }
@@ -30,14 +36,14 @@ const getSpotToday = async () => {
         if (!latestDate) {
             return null
         }
-         const result = await prisma.spotPrice.findMany({ where: { date: latestDate.date } })
-         if (result.length === 0) {
+        const result = await prisma.spotPrice.findMany({ where: { date: latestDate.date } })
+        if (result.length === 0) {
             return null
-         }
-         return result
+        }
+        return result
 
     } catch (error) {
-        console.error('error')
+        console.error(error)
     }
 }
 
@@ -76,9 +82,9 @@ const getLatestSpotWithVariation = async () => {
         }
 
     } catch (error) {
-        console.error('error')
+        console.error(error)
     }
 
 }
 
-module.exports = { getSpotPrices, saveSpotPrice, getLatestSpotWithVariation, getSpotToday };
+module.exports = { saveSpotPrice, getLatestSpotWithVariation, getSpotToday };
