@@ -3,6 +3,7 @@ const {router: healthRouter} = require('./routes/health.js');
 const {router: spotRouter} = require('./routes/spot.js')
 require('./crons/spotCron.js');
 const helmet = require('helmet')
+const cors = require('cors')
 const expressRateLimit = require('express-rate-limit')
 
 
@@ -10,6 +11,7 @@ const port = process.env.PORT || 3000;
 
 const app = express();
 
+app.use(cors());
 app.use(helmet());
 
 const limiter = expressRateLimit({
@@ -19,10 +21,10 @@ const limiter = expressRateLimit({
 
 app.use(limiter)
 
-app.listen(port, () => {
-    console.log(`Serveur runing on port ${port}`)
-});
-
 app.use('/health', healthRouter);
 
 app.use('/spot', spotRouter);
+
+app.listen(port, () => {
+    console.log(`Serveur runing on port ${port}`)
+});

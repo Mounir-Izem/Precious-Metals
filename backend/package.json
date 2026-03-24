@@ -4,6 +4,7 @@
   "description": "REST API for precious metals spot price tracking",
   "main": "src/index.js",
   "scripts": {
+    "start": "prisma generate && prisma migrate deploy && node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -18,6 +19,8 @@
   "author": "Mounir Izem",
   "license": "MIT",
   "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "cors": "^2.8.6",
     "express": "^5.2.1",
     "express-rate-limit": "^8.3.1",
     "helmet": "^8.1.0",
@@ -25,7 +28,6 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@prisma/client": "^5.22.0",
     "prisma": "^5.22.0"
   }
 }
