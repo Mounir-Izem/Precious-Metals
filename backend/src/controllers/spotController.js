@@ -1,15 +1,5 @@
-const { getSpotPrices, getLatestSpotWithVariation, getSpotToday } = require('../services/spotService.js');
+const { getLatestSpotWithVariation, getSpotToday } = require('../services/spotService.js');
 
-const getSpot = async (_req, res) => {
-    try {
-        const result = await getSpotPrices();
-
-        res.json(result);
-        
-    } catch (error) {
-        res.status(500).json({ 'status': 'error acces spot' });
-    }
-}
 
 const getLatestSpot = async (_req, res) => {
     try {
@@ -31,7 +21,7 @@ const getTodaySpot = async (_req, res) => {
         const todaySpot = await getSpotToday();
 
         if (!todaySpot) {
-            return res.status(404).json('Not enough data')
+            return res.status(404).json({'status': 'Not enough data'})
         }
 
         res.json(todaySpot)
@@ -41,4 +31,4 @@ const getTodaySpot = async (_req, res) => {
     }
 }
 
-module.exports = { getSpot, getLatestSpot, getTodaySpot };
+module.exports = { getLatestSpot, getTodaySpot };

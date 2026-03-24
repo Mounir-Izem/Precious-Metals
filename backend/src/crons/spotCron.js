@@ -3,7 +3,7 @@ const {saveSpotPrice} = require('../services/spotService.js');
 
 cron.schedule('30 10 * * *', async () => {
     try {
-        await saveSpotPrice()
+        await saveSpotPrice('AM')
     } catch (error) {
         console.error(error)
     }
@@ -13,7 +13,7 @@ cron.schedule('30 10 * * *', async () => {
 
 cron.schedule('00 15 * * *', async () => {
     try {
-        await saveSpotPrice()
+        await saveSpotPrice('PM')
     } catch (error) {
         console.error(error)
     }
