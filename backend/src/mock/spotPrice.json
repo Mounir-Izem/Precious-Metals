@@ -2,8 +2,7 @@
     "metals": {
         "lbma_gold_am": 1913.75,
         "lbma_gold_pm": 1928.75,
-        "lbma_silver_am": 22.57,
-        "lbma_silver_pm": 22.68
+        "lbma_silver": 22.57
     },
     
     "currencies": {

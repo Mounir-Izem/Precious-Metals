@@ -15,6 +15,7 @@ datasource db {
 enum Fixing {
   AM
   PM
+  NOON
 }
 
 enum Metal {
