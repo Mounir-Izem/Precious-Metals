@@ -1,7 +1,7 @@
 const cron = require('node-cron');
 const {saveSpotPrice} = require('../services/spotService.js');
 
-cron.schedule('30 10 * * *', async () => {
+cron.schedule('35 10 * * *', async () => {
     try {
         await saveSpotPrice('AM')
     } catch (error) {
@@ -11,9 +11,19 @@ cron.schedule('30 10 * * *', async () => {
     timezone: 'Europe/London'
 })
 
-cron.schedule('00 15 * * *', async () => {
+cron.schedule('05 15 * * *', async () => {
     try {
         await saveSpotPrice('PM')
+    } catch (error) {
+        console.error(error)
+    }
+}, {
+    timezone: 'Europe/London'
+})
+
+cron.schedule('05 12 * * *', async () => {
+    try {
+        await saveSpotPrice('NOON')
     } catch (error) {
         console.error(error)
     }

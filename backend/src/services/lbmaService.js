@@ -14,11 +14,11 @@ const normalizeData = (fixing) => {
             gbp_usd_rate: currencyRates.GBP, date: date
         },
         // Only one fixing/day for silver
-        {metal: 'silver', fixing: 'AM', oz_price_usd: metalPrices.lbma_silver, eur_usd_rate: currencyRates.EUR,
+        {metal: 'silver', fixing: 'NOON', oz_price_usd: metalPrices.lbma_silver, eur_usd_rate: currencyRates.EUR,
             gbp_usd_rate: currencyRates.GBP, date: date
         }
     ]
-    if (fixing !== 'AM' && fixing !== 'PM') {
+    if (fixing !== 'AM' && fixing !== 'PM' && fixing !== 'NOON') {
         return null
     }
     return data.filter(n => n.fixing === fixing) ;

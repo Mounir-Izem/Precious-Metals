@@ -50,7 +50,7 @@ const getSpotToday = async () => {
 const getLatestSpotWithVariation = async () => {
     try {
         const goldResults = await getLatestForMetal('gold', 'PM');
-        const silverResults = await getLatestForMetal('silver', 'AM');
+        const silverResults = await getLatestForMetal('silver', 'NOON');
         if (!goldResults || !silverResults ||
             goldResults.length < 2 || silverResults.length < 2) {
             return null
