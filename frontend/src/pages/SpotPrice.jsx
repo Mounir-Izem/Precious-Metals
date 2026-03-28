@@ -82,9 +82,6 @@ const SpotPrice = () => {
 
     return (
         <main>
-            <h1>Gold & Silver Spot Prices</h1>
-            <p>Clean market snapshot with AM and PM fixing, daily variation, and quick unit/currency controls.</p>
-            <time dateTime={new Date().toISOString()}>{new Date().toLocaleDateString()}</time>
             <div>
                 <SpotSelectors currency={currency} setCurrency={setCurrency} unit={unit} setUnit={setUnit}/>
             </div>
