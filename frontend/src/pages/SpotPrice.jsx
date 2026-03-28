@@ -2,6 +2,7 @@ import { trendColor, absFmt, fmt, sign, currencySymbol, convertPrice } from '../
 import { useState, useEffect, useMemo } from 'react';
 import { getSpotData, getSpotVariation } from '../services/api.js';
 import SpotSelectors from '../components/spot/Selectors.jsx'
+import MetalCard from '../components/spot/MetalCard.jsx'
 
 const SpotPrice = () => {
 
@@ -87,52 +88,27 @@ const SpotPrice = () => {
             <div>
                 <SpotSelectors currency={currency} setCurrency={setCurrency} unit={unit} setUnit={setUnit}/>
             </div>
-            <article>
-                <div>
-                    <span>Metal</span>
-                    <h3>Gold</h3>
-                </div>
-                <div>
-                    <h3>Day/Yesterday Variation</h3>
-                    <p className={trendColor(goldVarValue)}>
-                        {sign(goldVarValue)}{absFmt(goldVarValue)}{currencySymbol[currency]} ✺ {sign(goldVarPercent)}{absFmt(goldVarPercent)}%
-                    </p>
-                </div>
-                <div>
-                    <h3>AM Fixing</h3>
-                    <p>{fmt(goldAmPrice)}</p>
-                    <span>{currencySymbol[currency]} ✺ {unit}</span>
-                </div>
-                <div>
-                    <h3>PM Fixing</h3>
-                    <p>{fmt(goldPmPrice)}</p>
-                    <span>{currencySymbol[currency]} ✺ {unit}</span>
-                </div>
-                <div>
-                    <h3>Intraday AM/PM</h3>
-                    <p className={trendColor(goldIntradayConverted)}>
-                        {sign(goldIntradayConverted)}{absFmt(goldIntradayConverted)}{currencySymbol[currency]}
-                        ✺ {sign(goldIntradayPercent)}{absFmt(goldIntradayPercent)}%
-                    </p>
-                </div>
-            </article>
-            <article>
-                <div>
-                    <span>Metal</span>
-                    <h3>Silver</h3>
-                </div>
-                <div>
-                    <h3>Day/Yesterday Variation</h3>
-                    <p className={trendColor(silverVarValue)}>
-                        {sign(silverVarValue)}{absFmt(silverVarValue)}{currencySymbol[currency]} ✺ {sign(silverVarPercent)}{absFmt(silverVarPercent)}%
-                    </p>
-                </div>
-                <div>
-                    <h3>Fixing</h3>
-                    <p>{fmt(silverPrice)}</p>
-                    <span>{currencySymbol[currency]} ✺ {unit}</span>
-                </div>
-            </article>
+            <MetalCard
+            metalName={'Gold'}
+            varValue={goldVarValue}
+            varPercent={goldVarPercent} 
+            unit={unit}
+            currency={currency}
+            amPrice={goldAmPrice}
+            pmPrice={goldPmPrice}
+            intradayConverted={goldIntradayConverted}
+            intradayPercent={goldIntradayPercent}
+            hasPm={true}
+            />
+            <MetalCard
+            metalName={'Silver'}
+            currency={currency}
+            unit={unit}
+            varValue={silverVarValue}
+            varPercent={silverVarPercent}
+            amPrice={silverPrice}
+            hasPm={false} 
+            />
         </main>
     );
 };
