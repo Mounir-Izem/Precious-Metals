@@ -1,6 +1,7 @@
 import { trendColor, absFmt, fmt, sign, currencySymbol, convertPrice } from '../utils/spotUtils.js';
 import { useState, useEffect, useMemo } from 'react';
 import { getSpotData, getSpotVariation } from '../services/api.js';
+import SpotSelectors from '../components/spot/Selectors.jsx'
 
 const SpotPrice = () => {
 
@@ -84,16 +85,7 @@ const SpotPrice = () => {
             <p>Clean market snapshot with AM and PM fixing, daily variation, and quick unit/currency controls.</p>
             <time dateTime={new Date().toISOString()}>{new Date().toLocaleDateString()}</time>
             <div>
-                <select value={currency} onChange={e => setCurrency(e.target.value)}>
-                    <option value="USD">USD</option>
-                    <option value="EUR">EUR</option>
-                    <option value="GBP">GBP</option>
-                </select>
-                <select value={unit} onChange={e => setUnit(e.target.value)}>
-                    <option value="oz">oz</option>
-                    <option value="g">g</option>
-                    <option value="kg">kg</option>
-                </select>
+                <SpotSelectors currency={currency} setCurrency={setCurrency} unit={unit} setUnit={setUnit}/>
             </div>
             <article>
                 <div>
