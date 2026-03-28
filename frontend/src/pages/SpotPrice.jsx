@@ -3,9 +3,11 @@ import { useState, useEffect, useMemo } from 'react';
 import { getSpotData, getSpotVariation } from '../services/api.js';
 import SpotSelectors from '../components/spot/Selectors.jsx'
 import MetalCard from '../components/spot/MetalCard.jsx'
+import { useSpot } from '../context/SpotContext.jsx'
 
 const SpotPrice = () => {
 
+    // Declaration des states
     const [displayData, setDisplayData] = useState([]);
     const [displayVar, setDisplayVar] = useState({});
     const [currency, setCurrency] = useState('USD');
@@ -13,6 +15,7 @@ const SpotPrice = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // Appel api coté front
     useEffect(() => {
         const fetchAllData = async () => {
             try {
@@ -40,6 +43,7 @@ const SpotPrice = () => {
         fetchAllData();
     }, []);
 
+    // Utilisation de useMemo pour sécurisé le re-render
     const spotData = useMemo(() => {
         const goldFixingAm = displayData.find(n => n.metal === 'gold' && n.fixing === 'AM');
         const goldFixingPm = displayData.find(n => n.metal === 'gold' && n.fixing === 'PM');
@@ -74,40 +78,50 @@ const SpotPrice = () => {
         };
     }, [displayData, displayVar, currency, unit, spotData]);
 
+    // Consomation de la date du dernier fixing
+    const { setFixingDate } = useSpot();
+
+    useEffect(() => {
+        if (spotData.goldFixingAm?.date) {
+            setFixingDate(spotData.goldFixingAm.date);
+        }
+    }, [spotData]);
+
+    // Affichage du loading et error
     if (loading) return <main><h1>Loading ...</h1></main>;
     if (error) return <main><h1>Error loading market data.</h1></main>;
 
+    // Declaration des variables de protection re-render
     const { goldIntradayPercent, goldVarPercent, silverVarPercent } = spotData;
     const { goldAmPrice, goldPmPrice, silverPrice, goldVarValue, goldIntradayConverted, silverVarValue } = convertedPrices;
 
+
+
     return (
         <main>
-            <h1>Gold & Silver Spot Prices</h1>
-            <p>Clean market snapshot with AM and PM fixing, daily variation, and quick unit/currency controls.</p>
-            <time dateTime={new Date().toISOString()}>{new Date().toLocaleDateString()}</time>
             <div>
-                <SpotSelectors currency={currency} setCurrency={setCurrency} unit={unit} setUnit={setUnit}/>
+                <SpotSelectors currency={currency} setCurrency={setCurrency} unit={unit} setUnit={setUnit} />
             </div>
             <MetalCard
-            metalName={'Gold'}
-            varValue={goldVarValue}
-            varPercent={goldVarPercent} 
-            unit={unit}
-            currency={currency}
-            amPrice={goldAmPrice}
-            pmPrice={goldPmPrice}
-            intradayConverted={goldIntradayConverted}
-            intradayPercent={goldIntradayPercent}
-            hasPm={true}
+                metalName={'Gold'}
+                varValue={goldVarValue}
+                varPercent={goldVarPercent}
+                unit={unit}
+                currency={currency}
+                amPrice={goldAmPrice}
+                pmPrice={goldPmPrice}
+                intradayConverted={goldIntradayConverted}
+                intradayPercent={goldIntradayPercent}
+                hasPm={true}
             />
             <MetalCard
-            metalName={'Silver'}
-            currency={currency}
-            unit={unit}
-            varValue={silverVarValue}
-            varPercent={silverVarPercent}
-            amPrice={silverPrice}
-            hasPm={false} 
+                metalName={'Silver'}
+                currency={currency}
+                unit={unit}
+                varValue={silverVarValue}
+                varPercent={silverVarPercent}
+                amPrice={silverPrice}
+                hasPm={false}
             />
         </main>
     );
