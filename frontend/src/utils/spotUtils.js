@@ -2,9 +2,9 @@
 
 // Changement de couleurs dynamique
 export const trendColor = (value) => {
-    if (value > 0) return 'text-green-500'
-    if (value === 0) return 'text-gray-500'
-    if (value < 0) return 'text-red-500'
+    if (value > 0) return 'text-green-700'
+    if (value === 0) return 'text-gray-400'
+    if (value < 0) return 'text-red-400'
     return ''
 }
 

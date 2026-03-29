@@ -98,10 +98,8 @@ const SpotPrice = () => {
 
 
     return (
-        <main>
-            <div>
-                <SpotSelectors currency={currency} setCurrency={setCurrency} unit={unit} setUnit={setUnit} />
-            </div>
+        <section className="pt-2">
+            <SpotSelectors currency={currency} setCurrency={setCurrency} unit={unit} setUnit={setUnit} />
             <MetalCard
                 metalName={'Gold'}
                 varValue={goldVarValue}
@@ -113,6 +111,7 @@ const SpotPrice = () => {
                 intradayConverted={goldIntradayConverted}
                 intradayPercent={goldIntradayPercent}
                 hasPm={true}
+                ratio={null}
             />
             <MetalCard
                 metalName={'Silver'}
@@ -122,8 +121,9 @@ const SpotPrice = () => {
                 varPercent={silverVarPercent}
                 amPrice={silverPrice}
                 hasPm={false}
+                ratio={null}
             />
-        </main>
+        </section>
     );
 };
 
