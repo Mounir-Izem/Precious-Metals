@@ -19,7 +19,7 @@ const MetalCard = ({ metalName, varValue, varPercent, amPrice, pmPrice,
             background: 'radial-gradient(ellipse at 80% 80%, rgba(255,255,255,0.7) 0%, transparent 50%), linear-gradient(135deg, #FFFFFF 0%, #D8D8D8 25%, #A0A0A0 55%, #707070 100%)',
             boxShadow: '0 10px 40px rgba(100, 100, 100, 0.5), inset 0 2px 0 rgba(255,255,255,0.8), inset 0 -2px 0 rgba(0,0,0,0.15)'
         },
-        labelColor: 'text-gray-600'
+        labelColor: 'text-gray-700'
     };
     const cardStyle = metalName === 'Gold' ? styleGold : styleSilver;
 
