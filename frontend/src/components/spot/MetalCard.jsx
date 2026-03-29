@@ -4,7 +4,6 @@ const MetalCard = ({ metalName, varValue, varPercent, amPrice, pmPrice,
     intradayConverted, intradayPercent, currency, unit, hasPm }) => {
         
     return (
-        <main>
             <article>
                 <div>
                     <span>Metal</span>
@@ -34,7 +33,6 @@ const MetalCard = ({ metalName, varValue, varPercent, amPrice, pmPrice,
                     </p>
                 </div>)}
             </article>
-        </main>
     )
 }
 

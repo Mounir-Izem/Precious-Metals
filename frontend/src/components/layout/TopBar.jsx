@@ -6,13 +6,13 @@ const TopBar = () => {
     const { fixingDate } = useSpot()
 
     return (
-        <main>
+        <header>
             <h1>Precious Metals</h1>
             <div>
                 {fixingDate ? new Date(fixingDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }) : '-'}
             </div>
             <button>FR/EN</button>
-        </main>
+        </header>
     )
 }
 

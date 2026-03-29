@@ -1,18 +1,32 @@
-const SpotSelectors = ({unit, currency, setUnit, setCurrency}) => {
+const SpotSelectors = ({ unit, currency, setUnit, setCurrency }) => {
 
     return (
-        <main>
-            <select value={currency} onChange={e => setCurrency(e.target.value)}>
-                    <option value="USD">USD</option>
-                    <option value="EUR">EUR</option>
-                    <option value="GBP">GBP</option>
-                </select>
-                <select value={unit} onChange={e => setUnit(e.target.value)}>
-                    <option value="oz">oz</option>
-                    <option value="g">g</option>
-                    <option value="kg">kg</option>
-                </select>
-        </main>
+        <div>
+            <button
+                className={currency === 'USD' ? 'style-actif' : 'style-inactif'}
+                onClick={() => setCurrency('USD')}>USD
+            </button>
+            <button
+                className={currency === 'EUR' ? 'style-actif' : 'style-inactif'}
+                onClick={() => setCurrency('EUR')}>EUR
+            </button>
+            <button
+                className={currency === 'GBP' ? 'style-actif' : 'style-inactif'}
+                onClick={() => setCurrency('GBP')}>GBP
+            </button>
+
+            <button
+                className={unit === 'oz' ? 'style-actif' : 'style-inactif'}
+                onClick={() => setUnit('oz')}>oz
+            </button>
+            <button
+                className={unit === 'g' ? 'style-actif' : 'style-inactif'}
+                onClick={() => setUnit('g')}>g
+            </button>
+            <button
+                className={unit === 'kg' ? 'style-actif' : 'style-inactif'}
+                onClick={() => setUnit('kg')}>kg</button>
+        </div>
     )
 }
 
