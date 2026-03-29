@@ -1,30 +1,34 @@
 const SpotSelectors = ({ unit, currency, setUnit, setCurrency }) => {
 
+    const activeClass = 'bg-yellow-700 text-white border-yellow-700 rounded-full px-3 py-1 text-sm';
+    const inactiveClass = 'border border-gray-300 rounded-full px-3 py-1 text-sm';
+
+
     return (
-        <div>
+        <div className="flex gap-2 px-4 py-2">
             <button
-                className={currency === 'USD' ? 'style-actif' : 'style-inactif'}
+                className={currency === 'USD' ? activeClass : inactiveClass}
                 onClick={() => setCurrency('USD')}>USD
             </button>
             <button
-                className={currency === 'EUR' ? 'style-actif' : 'style-inactif'}
+                className={currency === 'EUR' ? activeClass : inactiveClass}
                 onClick={() => setCurrency('EUR')}>EUR
             </button>
             <button
-                className={currency === 'GBP' ? 'style-actif' : 'style-inactif'}
+                className={currency === 'GBP' ? activeClass : inactiveClass}
                 onClick={() => setCurrency('GBP')}>GBP
             </button>
 
             <button
-                className={unit === 'oz' ? 'style-actif' : 'style-inactif'}
+                className={unit === 'oz' ? activeClass : inactiveClass}
                 onClick={() => setUnit('oz')}>oz
             </button>
             <button
-                className={unit === 'g' ? 'style-actif' : 'style-inactif'}
+                className={unit === 'g' ? activeClass : inactiveClass}
                 onClick={() => setUnit('g')}>g
             </button>
             <button
-                className={unit === 'kg' ? 'style-actif' : 'style-inactif'}
+                className={unit === 'kg' ? activeClass : inactiveClass}
                 onClick={() => setUnit('kg')}>kg</button>
         </div>
     )

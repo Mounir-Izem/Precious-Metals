@@ -113,6 +113,7 @@ const SpotPrice = () => {
                 intradayConverted={goldIntradayConverted}
                 intradayPercent={goldIntradayPercent}
                 hasPm={true}
+                ratio={null}
             />
             <MetalCard
                 metalName={'Silver'}
@@ -122,6 +123,7 @@ const SpotPrice = () => {
                 varPercent={silverVarPercent}
                 amPrice={silverPrice}
                 hasPm={false}
+                ratio={null}
             />
         </main>
     );
