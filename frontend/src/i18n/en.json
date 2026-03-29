@@ -1,0 +1,15 @@
+{
+  "metalCard": {
+    "variation": "Day/Yesterday Variation",
+    "amFixing": "AM Fixing",
+    "pmFixing": "PM Fixing",
+    "intraday": "Intraday AM/PM"
+  },
+  "metals": {
+    "gold": "Gold",
+    "silver": "Silver"
+  },
+  "footer": {
+    "disclaimer": "Prices are provided for informational purposes only"
+  }
+}

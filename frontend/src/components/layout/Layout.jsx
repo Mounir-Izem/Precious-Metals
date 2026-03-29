@@ -7,11 +7,12 @@ import { SpotContext } from '../../context/SpotContext.jsx'
 
 const Layout = () => {
 
-    const  [fixingDate, setFixingDate] = useState(null) 
+    const  [fixingDate, setFixingDate] = useState(null);
+    const [language, setLanguage] = useState('fr');
 
     return (
         <main className="bg-gray-100 pb-50">
-            <SpotContext.Provider value={{fixingDate, setFixingDate}}>
+            <SpotContext.Provider value={{fixingDate, setFixingDate, language, setLanguage}}>
                 <TopBar />
                 <Outlet />
                 <BottomNav />

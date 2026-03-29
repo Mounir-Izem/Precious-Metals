@@ -1,0 +1,15 @@
+{
+  "metalCard": {
+    "variation": "Variation J/J",
+    "amFixing": "Fixing Matin",
+    "pmFixing": "Fixing Après-midi",
+    "intraday": "variation Matin/Après-midi"
+  },
+  "metals": {
+    "gold": "Or",
+    "silver": "Argent"
+  },
+  "footer": {
+    "disclaimer": "Les prix sont fournis à titre indicatif uniquement"
+  }
+}

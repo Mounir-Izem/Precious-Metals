@@ -1,7 +1,11 @@
 import { trendColor, absFmt, fmt, sign, currencySymbol } from '../../utils/spotUtils.js';
+import { useTranslation } from 'react-i18next'
 
 const MetalCard = ({ metalName, varValue, varPercent, amPrice, pmPrice,
     intradayConverted, intradayPercent, currency, unit, hasPm, ratio }) => {
+    
+    // Gestion de la traduction des langues
+    const { t } = useTranslation();
 
     // Pattern pour les styles css
 
@@ -26,9 +30,9 @@ const MetalCard = ({ metalName, varValue, varPercent, amPrice, pmPrice,
     return (
         <article className={cardStyle.className} style={cardStyle.style}>
             <div className="flex justify-between items-start">
-                <h3 className='text-4xl font-black italic uppercase'>{metalName}</h3>
+                <h3 className='text-4xl font-black italic uppercase'>{t(`metals.${metalName.toLowerCase()}`)}</h3>
                 <div className="text-right">
-                    <h3 className={`text-xs uppercase font-bold ${cardStyle.labelColor}`}>Day/Yesterday Variation</h3>
+                    <h3 className={`text-xs uppercase font-bold ${cardStyle.labelColor}`}>{t('metalCard.variation')}</h3>
                     <p className={`${trendColor(varValue)} font-bold text-sm`}>
                         {sign(varValue)}{absFmt(varValue)}{currencySymbol[currency]} ✺ {sign(varPercent)}{absFmt(varPercent)}%
                     </p>
@@ -36,13 +40,13 @@ const MetalCard = ({ metalName, varValue, varPercent, amPrice, pmPrice,
             </div>
             <div className="flex gap-4 mt-3">
                 <div className="flex-1">
-                    <h3 className="text-xs uppercase opacity-70 font-semibold">AM Fixing</h3>
+                    <h3 className="text-xs uppercase opacity-70 font-semibold">{t('metalCard.amFixing')}</h3>
                     <p className="text-2xl font-bold">{fmt(amPrice)}</p>
                     <span className="text-xs opacity-70">{currencySymbol[currency]} / {unit}</span>
                 </div>
                 {hasPm && (
                     <div className="flex-1">
-                        <p className="text-xs uppercase opacity-70 font-semibold">PM Fixing</p>
+                        <p className="text-xs uppercase opacity-70 font-semibold">{t('metalCard.pmFixing')}</p>
                         <p className="text-2xl font-bold">{fmt(pmPrice)}</p>
                         <span className="text-xs opacity-70">{currencySymbol[currency]} / {unit}</span>
                     </div>
@@ -63,7 +67,7 @@ const MetalCard = ({ metalName, varValue, varPercent, amPrice, pmPrice,
                 )}
                 {hasPm && (
                     <div className="text-right">
-                        <h3 className={`text-xs uppercase font-bold ${cardStyle.labelColor}`}>Intraday AM/PM</h3>
+                        <h3 className={`text-xs uppercase font-bold ${cardStyle.labelColor}`}>{t('metalCard.intraday')}</h3>
                         <p className={`${trendColor(intradayConverted)} font-bold text-sm`}>
                             {sign(intradayConverted)}{absFmt(intradayConverted)}{currencySymbol[currency]}
                             ✺ {sign(intradayPercent)}{absFmt(intradayPercent)}%
