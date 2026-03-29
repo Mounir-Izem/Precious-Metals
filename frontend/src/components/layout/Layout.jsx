@@ -10,7 +10,7 @@ const Layout = () => {
     const  [fixingDate, setFixingDate] = useState(null) 
 
     return (
-        <main className="bg-gray-100">
+        <main className="bg-gray-100 pb-50">
             <SpotContext.Provider value={{fixingDate, setFixingDate}}>
                 <TopBar />
                 <Outlet />

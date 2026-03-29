@@ -1,11 +1,8 @@
 const Footer = () => {
 
     return (
-        <footer>
-            <p>SOURCE: LBMA</p>
-            <p>Disclamer: Les prix affichés sont fournis à titre indicatif uniquement et ne constituent pas un conseil en investissement</p>
-            <p>CGU</p>
-            <p>Copyright — © 2026 Precious Metals</p>
+        <footer className="text-center text-xs text-gray-400 py-3">
+            SOURCE : LBMA | Les prix sont fournis à titre indicatif uniquement
         </footer>
     )
 }

@@ -5,7 +5,7 @@ const SpotSelectors = ({ unit, currency, setUnit, setCurrency }) => {
 
 
     return (
-        <div className="flex gap-2 px-4 py-2">
+        <div className="flex justify-center items-center gap-2 px-4 py-2">
             <button
                 className={currency === 'USD' ? activeClass : inactiveClass}
                 onClick={() => setCurrency('USD')}>USD
@@ -18,7 +18,7 @@ const SpotSelectors = ({ unit, currency, setUnit, setCurrency }) => {
                 className={currency === 'GBP' ? activeClass : inactiveClass}
                 onClick={() => setCurrency('GBP')}>GBP
             </button>
-
+            <div className="w-px h-6 bg-gray-300 mx-1"/>
             <button
                 className={unit === 'oz' ? activeClass : inactiveClass}
                 onClick={() => setUnit('oz')}>oz
@@ -29,7 +29,8 @@ const SpotSelectors = ({ unit, currency, setUnit, setCurrency }) => {
             </button>
             <button
                 className={unit === 'kg' ? activeClass : inactiveClass}
-                onClick={() => setUnit('kg')}>kg</button>
+                onClick={() => setUnit('kg')}>kg
+            </button>
         </div>
     )
 }
