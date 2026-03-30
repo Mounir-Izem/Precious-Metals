@@ -68,14 +68,17 @@ const SpotPrice = () => {
     const convertedPrices = useMemo(() => {
         const { goldFixingAm, goldFixingPm, silverFixing, goldIntradayValue } = spotData;
 
-        return {
-            goldAmPrice: convertPrice(goldFixingAm?.oz_price_usd, unit, currency, goldFixingAm?.eur_usd_rate, goldFixingAm?.gbp_usd_rate),
-            goldPmPrice: convertPrice(goldFixingPm?.oz_price_usd, unit, currency, goldFixingPm?.eur_usd_rate, goldFixingPm?.gbp_usd_rate),
-            silverPrice: convertPrice(silverFixing?.oz_price_usd, unit, currency, silverFixing?.eur_usd_rate, silverFixing?.gbp_usd_rate),
-            goldVarValue: convertPrice(displayVar.gold?.variationValue, unit, currency, goldFixingPm?.eur_usd_rate, goldFixingPm?.gbp_usd_rate),
-            goldIntradayConverted: convertPrice(goldIntradayValue, unit, currency, goldFixingPm?.eur_usd_rate, goldFixingPm?.gbp_usd_rate),
-            silverVarValue: convertPrice(displayVar.silver?.variationValue, unit, currency, silverFixing?.eur_usd_rate, silverFixing?.gbp_usd_rate),
-        };
+        const goldAmPrice = convertPrice(goldFixingAm?.oz_price_usd, unit, currency, goldFixingAm?.eur_usd_rate, goldFixingAm?.gbp_usd_rate);
+        const goldPmPrice = convertPrice(goldFixingPm?.oz_price_usd, unit, currency, goldFixingPm?.eur_usd_rate, goldFixingPm?.gbp_usd_rate);
+        const silverPrice = convertPrice(silverFixing?.oz_price_usd, unit, currency, silverFixing?.eur_usd_rate, silverFixing?.gbp_usd_rate);
+        const goldVarValue = convertPrice(displayVar.gold?.variationValue, unit, currency, goldFixingPm?.eur_usd_rate, goldFixingPm?.gbp_usd_rate);
+        const goldIntradayConverted = convertPrice(goldIntradayValue, unit, currency, goldFixingPm?.eur_usd_rate, goldFixingPm?.gbp_usd_rate);
+        const silverVarValue = convertPrice(displayVar.silver?.variationValue, unit, currency, silverFixing?.eur_usd_rate, silverFixing?.gbp_usd_rate);
+        const ratio = Number.isFinite(goldPmPrice) && Number.isFinite(silverPrice) && silverPrice !== 0
+            ? (goldPmPrice / silverPrice).toFixed(2)
+            : null;
+
+        return { goldAmPrice, goldPmPrice, silverPrice, goldVarValue, goldIntradayConverted, silverVarValue, ratio };
     }, [displayData, displayVar, currency, unit, spotData]);
 
     // Consomation de la date du dernier fixing
@@ -93,7 +96,7 @@ const SpotPrice = () => {
 
     // Declaration des variables de protection re-render
     const { goldIntradayPercent, goldVarPercent, silverVarPercent } = spotData;
-    const { goldAmPrice, goldPmPrice, silverPrice, goldVarValue, goldIntradayConverted, silverVarValue } = convertedPrices;
+    const { goldAmPrice, goldPmPrice, silverPrice, goldVarValue, goldIntradayConverted, silverVarValue, ratio } = convertedPrices;
 
 
 
@@ -111,7 +114,7 @@ const SpotPrice = () => {
                 intradayConverted={goldIntradayConverted}
                 intradayPercent={goldIntradayPercent}
                 hasPm={true}
-                ratio={null}
+                ratio={ratio}
             />
             <MetalCard
                 metalName={'Silver'}
@@ -121,7 +124,7 @@ const SpotPrice = () => {
                 varPercent={silverVarPercent}
                 amPrice={silverPrice}
                 hasPm={false}
-                ratio={null}
+                ratio={ratio}
             />
         </section>
     );

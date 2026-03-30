@@ -30,7 +30,7 @@ const MetalCard = ({ metalName, varValue, varPercent, amPrice, pmPrice,
     return (
         <article className={cardStyle.className} style={cardStyle.style}>
             <div className="flex justify-between items-start">
-                <h3 className='text-4xl font-black italic uppercase'>{t(`metals.${metalName.toLowerCase()}`)}</h3>
+                <h3 className='text-4xl italic uppercase'>{t(`metals.${metalName.toLowerCase()}`)}</h3>
                 <div className="text-right">
                     <h3 className={`text-xs uppercase font-bold ${cardStyle.labelColor}`}>{t('metalCard.variation')}</h3>
                     <p className={`${trendColor(varValue)} font-bold text-sm`}>
@@ -53,16 +53,20 @@ const MetalCard = ({ metalName, varValue, varPercent, amPrice, pmPrice,
                 )}
                 {!hasPm && (
                     <div className="flex-1">
-                        <h3 className={`text-xs uppercase font-bold ${cardStyle.labelColor}`}>Ratio</h3>
-                        <p className="text-2xl font-bold">{ratio ?? '—'}</p>
+                        <h3 className={`text-xs uppercase font-bold ${cardStyle.labelColor}`}>Ratio Oz</h3>
+                        <p className="text-2xl">
+                            <span className="font-black">{ratio}</span> / 1
+                        </p>
                     </div>
                 )}
             </div>
             <div className="flex justify-between items-center mt-3">
                 {hasPm && (
                     <div>
-                        <h3 className={`text-xs uppercase font-bold ${cardStyle.labelColor}`}>Ratio</h3>
-                        <p>{ratio ?? '—'}</p>
+                        <h3 className={`text-xs uppercase font-bold ${cardStyle.labelColor}`}>Ratio Oz</h3>
+                        <p>
+                            <span className="font-black">1 /</span> {ratio}
+                        </p>
                     </div>
                 )}
                 {hasPm && (
