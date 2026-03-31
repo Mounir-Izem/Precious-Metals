@@ -1,4 +1,4 @@
-const prisma = require('../db.js');
+import prisma from '../db.js';
 
 const getHealth = (_req, res) => {
     res.status(200).json({'status': 'succes'})
@@ -13,4 +13,4 @@ const checkHealth = async (_req, res) => {
     }
 }
 
-module.exports = {getHealth, checkHealth};
+export {getHealth, checkHealth};

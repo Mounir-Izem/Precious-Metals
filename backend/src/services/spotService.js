@@ -1,5 +1,5 @@
-const prisma = require('../db.js');
-const { normalizeData } = require('./lbmaService.js');
+import prisma from '../db.js';
+import { normalizeData } from './lbmaService.js';
 
 const saveSpotPrice = async (fixing) => {
     try {
@@ -87,4 +87,4 @@ const getLatestSpotWithVariation = async () => {
 
 }
 
-module.exports = { saveSpotPrice, getLatestSpotWithVariation, getSpotToday };
+export { saveSpotPrice, getLatestSpotWithVariation, getSpotToday };

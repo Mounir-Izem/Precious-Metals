@@ -1,10 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const healthController = require('../controllers/healthController.js');
+import express from 'express'
+import * as healthController from '../controllers/healthController.js'
 
-router.get('/', healthController.getHealth);
-router.get('/ready', healthController.checkHealth);
+const router = express.Router()
 
+router.get('/', healthController.getHealth)
+router.get('/ready', healthController.checkHealth)
 
-module.exports = { router };
+export { router }
+
 

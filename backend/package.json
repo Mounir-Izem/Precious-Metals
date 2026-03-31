@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "description": "REST API for precious metals spot price tracking",
   "main": "src/index.js",
+  "type": "module",
   "scripts": {
     "start": "prisma generate && prisma migrate deploy && node src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest"
   },
   "keywords": [
     "gold",
@@ -30,6 +31,8 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.14",
-    "prisma": "^5.22.0"
+    "prisma": "^5.22.0",
+    "supertest": "^7.2.2",
+    "vitest": "^4.1.2"
   }
 }

@@ -1,5 +1,5 @@
-const cron = require('node-cron');
-const {saveSpotPrice} = require('../services/spotService.js');
+import cron from 'node-cron'
+import { saveSpotPrice } from '../services/spotService.js'
 
 cron.schedule('35 10 * * *', async () => {
     try {
