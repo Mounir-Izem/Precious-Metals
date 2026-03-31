@@ -1,4 +1,4 @@
-const mockData = require('../mock/spotPrice.json');
+import mockData from '../data/lbma_mock_data.json';
 
 
 
@@ -25,4 +25,4 @@ const normalizeData = (fixing) => {
 
 }
 
-module.exports = {normalizeData};
+export { normalizeData };

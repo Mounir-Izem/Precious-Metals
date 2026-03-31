@@ -1,4 +1,4 @@
-const { getLatestSpotWithVariation, getSpotToday } = require('../services/spotService.js');
+import { getLatestSpotWithVariation, getSpotToday } from '../services/spotService.js';
 
 
 const getLatestSpot = async (_req, res) => {
@@ -31,4 +31,4 @@ const getTodaySpot = async (_req, res) => {
     }
 }
 
-module.exports = { getLatestSpot, getTodaySpot };
+export { getLatestSpot, getTodaySpot };
