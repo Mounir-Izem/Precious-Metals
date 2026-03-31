@@ -37,11 +37,11 @@ export const convertCurrency = (priceUsd, currency, eurRate, gbpRate) => {
     const gbp = parseFloat(gbpRate);
 
     if (currency === 'EUR') {
-        return Number.isNaN(eur) ? null : priceUsd / eur;
+        return Number.isNaN(eur) || eur === 0 ? null : priceUsd / eur;
     }
 
     if (currency === 'GBP') {
-        return Number.isNaN(gbp) ? null : priceUsd / gbp;
+        return Number.isNaN(gbp) || gbp === 0 ? null : priceUsd / gbp;
     }
 
     return priceUsd;
