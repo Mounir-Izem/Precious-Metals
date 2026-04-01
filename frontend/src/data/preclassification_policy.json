@@ -1,0 +1,83 @@
+{
+  "preclassification_policy_version": "1.0.0",
+  "scope": "input_guard_before_catalog_resolution",
+  "purpose": "Reject or flag obvious non-precious or out-of-scope coins before verdict computation.",
+  "supported_outputs": [
+    "continue_to_catalog_resolution",
+    "reject_non_precious",
+    "reject_unsupported_coin"
+  ],
+  "error_code_registry": [
+    "non_precious_metal_detected",
+    "unsupported_non_precious_coin"
+  ],
+  "rules": [
+    {
+      "rule_id": "nickel_1f_semeuse_modern",
+      "match_all": [
+        "1 franc",
+        "semeuse"
+      ],
+      "match_any": [
+        "1960",
+        "1961",
+        "1962",
+        "1963",
+        "1964",
+        "1965",
+        "1966",
+        "1967",
+        "1968",
+        "1969",
+        "1970",
+        "1971",
+        "1972",
+        "1973",
+        "1974",
+        "1975",
+        "1976",
+        "1977",
+        "1978",
+        "1979",
+        "1980",
+        "1981",
+        "1982",
+        "1983",
+        "1984",
+        "1985",
+        "1986",
+        "1987",
+        "1988",
+        "1989",
+        "1990",
+        "1991",
+        "1992",
+        "1993",
+        "1994",
+        "1995",
+        "1996",
+        "1997",
+        "1998",
+        "1999",
+        "2000",
+        "2001"
+      ],
+      "action": "reject_non_precious",
+      "error_code": "non_precious_metal_detected",
+      "message": "Métal non précieux détecté (Nickel)."
+    },
+    {
+      "rule_id": "explicit_non_precious_metal_keyword",
+      "match_any": [
+        "nickel",
+        "cupronickel",
+        "cupro-nickel",
+        "aluminium bronze",
+        "acier"
+      ],
+      "action": "reject_non_precious",
+      "error_code": "non_precious_metal_detected",
+      "message": "Métal non précieux détecté."
+    }
+  ]
+}

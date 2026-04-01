@@ -1,0 +1,108 @@
+{
+  "decision_output_schema_version": "1.2.0",
+  "schema_scope": "verdict_engine_output",
+  "required_fields": [
+    "success",
+    "verdict",
+    "verdict_code",
+    "input_ref",
+    "product_ref",
+    "pricing_context",
+    "computed_values",
+    "applied_policy",
+    "explanation"
+  ],
+  "field_definitions": {
+    "success": {
+      "type": "boolean"
+    },
+    "verdict": {
+      "type": "string",
+      "allowed_values": [
+        "good_deal",
+        "fair",
+        "expensive",
+        "manual_review_required"
+      ]
+    },
+    "verdict_code": {
+      "type": "string",
+      "allowed_values": [
+        "below_spot",
+        "within_good_deal_threshold",
+        "within_fair_threshold",
+        "above_fair_threshold",
+        "manual_engine",
+        "manual_collection_sensitivity",
+        "manual_year_sensitivity",
+        "manual_missing_data",
+        "manual_invalid_spot",
+        "manual_unsupported_case"
+      ]
+    },
+    "scan_assessment": {
+      "type": "object",
+      "optional": true
+    }
+  },
+  "applied_policy_requirements": {
+    "required_fields": [
+      "intent",
+      "good_deal_max_pct",
+      "fair_max_pct",
+      "family_override_applied",
+      "manual_review_triggered",
+      "threshold_source",
+      "threshold_source_ref"
+    ]
+  },
+  "scan_assessment_schema": {
+    "required_fields": [
+      "performed",
+      "scan_mode",
+      "design_match_confidence",
+      "diameter_check_result",
+      "ocr_detected_text",
+      "scan_flags"
+    ],
+    "allowed_scan_mode_values": [
+      "none",
+      "assistive_camera",
+      "assistive_image_upload"
+    ],
+    "allowed_diameter_check_values": [
+      "not_run",
+      "pass",
+      "fail",
+      "inconclusive"
+    ]
+  },
+  "consistency_rules": [
+    "if verdict = manual_review_required => applied_policy.manual_review_triggered must be true",
+    "if verdict = manual_review_required => verdict_code must start with manual_",
+    "if pricing_context.pricing_engine != manual_only and success = true => computed_values.melt_value must be numeric",
+    "if pricing_context.pricing_engine != manual_only and success = true => computed_values.premium_value must be numeric",
+    "if pricing_context.pricing_engine != manual_only and success = true => computed_values.premium_pct must be numeric",
+    "if applied_policy.family_override_applied = true => explanation.reason_tags should include family_override"
+  ],
+  "recommended_error_output_schema": {
+    "required_fields": [
+      "success",
+      "error_code",
+      "message"
+    ],
+    "allowed_error_codes": [
+      "unknown_family",
+      "unknown_variant",
+      "unsupported_intent",
+      "missing_spot_price",
+      "invalid_quantity",
+      "invalid_ask_price",
+      "invalid_spot_price",
+      "catalog_resolution_failed",
+      "policy_resolution_failed",
+      "non_precious_metal_detected",
+      "unsupported_non_precious_coin"
+    ]
+  }
+}

@@ -1,0 +1,177 @@
+{
+  "input_contract_version": "1.2.0",
+  "contract_scope": "verdict_engine_input",
+  "required_fields": [
+    "family_id",
+    "variant_code",
+    "ask_price",
+    "user_intent"
+  ],
+  "optional_fields": [
+    "spot_price_per_g_fine",
+    "currency",
+    "quantity",
+    "source",
+    "raw_title",
+    "ocr_text"
+  ],
+  "field_definitions": {
+    "family_id": {
+      "type": "string",
+      "constraints": [
+        "must_exist_in_catalog"
+      ]
+    },
+    "variant_code": {
+      "type": "string",
+      "constraints": [
+        "must_exist_in_family_variants"
+      ]
+    },
+    "ask_price": {
+      "type": "number",
+      "constraints": [
+        "must_be_positive",
+        "must_be_finite"
+      ]
+    },
+    "user_intent": {
+      "type": "string",
+      "allowed_values": [
+        "stacking",
+        "semi_stack",
+        "liquidity"
+      ]
+    },
+    "spot_price_per_g_fine": {
+      "type": "number",
+      "constraints": [
+        "must_be_positive",
+        "must_be_finite"
+      ],
+      "required_if": [
+        "pricing_engine != manual_only"
+      ]
+    },
+    "currency": {
+      "type": "string",
+      "default": "EUR"
+    },
+    "quantity": {
+      "type": "number",
+      "default": 1,
+      "constraints": [
+        "must_be_integer",
+        "must_be_positive"
+      ]
+    },
+    "source": {
+      "type": "string",
+      "optional": true
+    },
+    "raw_title": {
+      "type": "string",
+      "optional": true
+    },
+    "ocr_text": {
+      "type": "string",
+      "optional": true
+    }
+  },
+  "preclassification_flow": {
+    "enabled": true,
+    "policy_ref": "preclassification_policy.json",
+    "steps": [
+      "1. inspect raw_title and/or ocr_text if present",
+      "2. apply preclassification rules",
+      "3. reject obvious non-precious cases before catalog resolution",
+      "4. continue only if no blocking preclassification rule matched"
+    ]
+  },
+  "resolution_rules": {
+    "steps": [
+      "1. find family by family_id",
+      "2. find variant by variant_code",
+      "3. load pricing_engine from family.trade_profile",
+      "4. validate required inputs based on pricing_engine",
+      "5. enrich input with catalog data"
+    ]
+  },
+  "resolution_outputs": [
+    "family_name",
+    "variant_label",
+    "metal",
+    "issuer_country",
+    "series_role",
+    "pricing_engine",
+    "fine_weight_g",
+    "purity",
+    "gross_weight_g",
+    "diameter_mm",
+    "scan_capability",
+    "media_profile"
+  ],
+  "derived_fields": {
+    "unit_price": {
+      "formula": "ask_price / quantity"
+    },
+    "fine_weight_total_g": {
+      "formula": "variant.fine_weight_g * quantity"
+    }
+  },
+  "error_code_registry": [
+    "unknown_family",
+    "unknown_variant",
+    "unsupported_intent",
+    "missing_spot_price",
+    "invalid_quantity",
+    "invalid_ask_price",
+    "invalid_spot_price",
+    "catalog_resolution_failed",
+    "policy_resolution_failed",
+    "non_precious_metal_detected",
+    "unsupported_non_precious_coin"
+  ],
+  "validation_rules": [
+    {
+      "rule": "family must exist",
+      "error_code": "unknown_family"
+    },
+    {
+      "rule": "variant must exist in family",
+      "error_code": "unknown_variant"
+    },
+    {
+      "rule": "user_intent must be supported by family",
+      "error_code": "unsupported_intent"
+    },
+    {
+      "rule": "spot_price_per_g_fine required if pricing_engine != manual_only",
+      "error_code": "missing_spot_price"
+    },
+    {
+      "rule": "quantity must be >= 1",
+      "error_code": "invalid_quantity"
+    },
+    {
+      "rule": "ask_price must be > 0",
+      "error_code": "invalid_ask_price"
+    },
+    {
+      "rule": "spot_price_per_g_fine must be > 0 when present",
+      "error_code": "invalid_spot_price"
+    }
+  ],
+  "normalization_rules": {
+    "currency": {
+      "uppercase": true
+    },
+    "user_intent": {
+      "lowercase": true
+    }
+  },
+  "rejection_policy": {
+    "on_error": "reject_input",
+    "on_warning": "allow_with_flag"
+  }
+}
