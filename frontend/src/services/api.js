@@ -8,6 +8,7 @@ export const getSpotData = async () => {
         return data
     } catch (error) {
         console.error(error)
+        return null
     }
 }
 
@@ -21,5 +22,6 @@ export const getSpotVariation = async () => {
         return data
     } catch (error) {
         console.error(error)
+        return null
     }
 }
