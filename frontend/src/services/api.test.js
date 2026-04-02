@@ -21,11 +21,11 @@ describe("getSpotData", () => {
         const data = await getSpotData();
         expect(data).toBeNull();
     });
-    it('should return undefined on network error', async () => {
+    it('should return null on network error', async () => {
         global.fetch = vi.fn().mockRejectedValue(new Error('Network error'));
 
         const data = await getSpotData();
-        expect(data).toBeUndefined();
+        expect(data).toBeNull();
     });
 });
 
@@ -48,11 +48,11 @@ describe("getSpotVariation", () => {
         const data = await getSpotVariation();
         expect(data).toBeNull();
     });
-    it('should return undefined on network error', async () => {
+    it('should return null on network error', async () => {
         global.fetch = vi.fn().mockRejectedValue(new Error('Network error'));
 
         const data = await getSpotVariation();
-        expect(data).toBeUndefined();
+        expect(data).toBeNull();
     });
 
 });
