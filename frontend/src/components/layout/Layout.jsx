@@ -11,7 +11,7 @@ const Layout = () => {
     const [language, setLanguage] = useState('fr');
 
     return (
-        <main className="bg-gray-100 pb-50">
+        <main className="bg-[#1c1c1e] pb-50">
             <SpotContext.Provider value={{fixingDate, setFixingDate, language, setLanguage}}>
                 <TopBar />
                 <Outlet />
