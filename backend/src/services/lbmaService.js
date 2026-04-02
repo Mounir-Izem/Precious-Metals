@@ -1,4 +1,4 @@
-import mockData from '../data/lbma_mock_data.json';
+import mockData from '../mock/spotPrice.json' assert { type: 'json' };
 
 
 
