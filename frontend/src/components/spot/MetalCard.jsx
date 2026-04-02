@@ -12,18 +12,21 @@ const MetalCard = ({ metalName, varValue, varPercent, amPrice, pmPrice,
     const styleGold = {
         className: "rounded-2xl p-4 mx-4 my-2 shadow-lg text-white",
         style: {
-            background: 'radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.4) 0%, transparent 40%), radial-gradient(ellipse at 90% 90%, rgba(255,255,255,0.35) 0%, transparent 45%), linear-gradient(135deg, #FFE566 0%, #F0B429 25%, #B8860B 55%, #8B6508 100%)',
-            boxShadow: '0 10px 40px rgba(184, 134, 11, 0.6), inset 0 2px 0 rgba(255,255,255,0.5), inset 0 -2px 0 rgba(0,0,0,0.2)'
+            background: 'radial-gradient(ellipse at 25% 15%, rgba(255,255,255,0.7) 0%, transparent 40%), radial-gradient(ellipse at 85% 85%, rgba(255,255,255,0.2) 0%, transparent 40%), linear-gradient(135deg, #FFE566 0%, #F0B429 25%, #B8860B 55%, #8B6508 100%)',
+            boxShadow: '0 8px 24px rgba(184, 134, 11, 0.45), inset 0 2px 0 rgba(255,255,255,0.6), inset 0 -2px 0 rgba(0,0,0,0.25)',
+            textShadow: '0 1px 3px rgba(0,0,0,0.5)'
         },
-        labelColor: 'text-white'
+        labelColor: 'text-white',
+        subLabelColor: 'text-white/70'
     };
     const styleSilver = {
         className: "rounded-2xl p-4 mx-4 my-2 shadow-lg text-gray-800",
         style: {
-            background: 'radial-gradient(ellipse at 80% 80%, rgba(255,255,255,0.7) 0%, transparent 50%), linear-gradient(135deg, #FFFFFF 0%, #D8D8D8 25%, #A0A0A0 55%, #707070 100%)',
-            boxShadow: '0 10px 40px rgba(100, 100, 100, 0.5), inset 0 2px 0 rgba(255,255,255,0.8), inset 0 -2px 0 rgba(0,0,0,0.15)'
+            background: 'radial-gradient(ellipse at 18% 12%, rgba(255,255,255,1.0) 0%, rgba(255,255,255,0.6) 15%, transparent 38%), linear-gradient(118deg, rgba(255,255,255,0.0) 30%, rgba(255,255,255,0.4) 48%, rgba(255,255,255,0.0) 66%), radial-gradient(ellipse at 80% 80%, rgba(200,215,225,0.3) 0%, transparent 40%), linear-gradient(135deg, #F0F4F8 0%, #B8C4CC 25%, #7A8A95 55%, #4E6070 100%)',
+            boxShadow: '0 8px 28px rgba(70, 85, 95, 0.6), inset 0 2px 0 rgba(255,255,255,0.95), inset 0 -2px 0 rgba(0,0,0,0.25)'
         },
-        labelColor: 'text-gray-700'
+        labelColor: 'text-gray-800',
+        subLabelColor: 'text-gray-500'
     };
     const cardStyle = metalName === 'Gold' ? styleGold : styleSilver;
 
@@ -33,22 +36,22 @@ const MetalCard = ({ metalName, varValue, varPercent, amPrice, pmPrice,
                 <h3 className='text-4xl italic uppercase'>{t(`metals.${metalName.toLowerCase()}`)}</h3>
                 <div className="text-right">
                     <h3 className={`text-xs uppercase font-bold ${cardStyle.labelColor}`}>{t('metalCard.variation')}</h3>
-                    <p className={`${trendColor(varValue)} font-bold text-sm`}>
+                    <p className={`${trendColor(varValue)} font-bold text-sm bg-black/20 rounded-full px-2 py-0.5`}>
                         {sign(varValue)}{absFmt(varValue)}{currencySymbol[currency]} ✺ {sign(varPercent)}{absFmt(varPercent)}%
                     </p>
                 </div>
             </div>
             <div className="flex gap-4 mt-3">
                 <div className="flex-1">
-                    <h3 className="text-xs uppercase opacity-70 font-semibold">{t('metalCard.amFixing')}</h3>
+                    <h3 className={`text-xs uppercase font-bold ${cardStyle.labelColor}`}>{t('metalCard.amFixing')}</h3>
                     <p className="text-2xl font-bold">{fmt(amPrice)}</p>
-                    <span className="text-xs opacity-70">{currencySymbol[currency]} / {unit}</span>
+                    <span className={`text-xs ${cardStyle.subLabelColor}`}>{currencySymbol[currency]} / {unit}</span>
                 </div>
                 {hasPm && (
                     <div className="flex-1">
-                        <p className="text-xs uppercase opacity-70 font-semibold">{t('metalCard.pmFixing')}</p>
+                        <p className={`text-xs uppercase font-bold ${cardStyle.labelColor}`}>{t('metalCard.pmFixing')}</p>
                         <p className="text-2xl font-bold">{fmt(pmPrice)}</p>
-                        <span className="text-xs opacity-70">{currencySymbol[currency]} / {unit}</span>
+                        <span className={`text-xs ${cardStyle.subLabelColor}`}>{currencySymbol[currency]} / {unit}</span>
                     </div>
                 )}
                 {!hasPm && (
@@ -72,7 +75,7 @@ const MetalCard = ({ metalName, varValue, varPercent, amPrice, pmPrice,
                 {hasPm && (
                     <div className="text-right">
                         <h3 className={`text-xs uppercase font-bold ${cardStyle.labelColor}`}>{t('metalCard.intraday')}</h3>
-                        <p className={`${trendColor(intradayConverted)} font-bold text-sm`}>
+                        <p className={`${trendColor(intradayConverted)} font-bold text-sm bg-black/20 rounded-full px-2 py-0.5`}>
                             {sign(intradayConverted)}{absFmt(intradayConverted)}{currencySymbol[currency]}
                             ✺ {sign(intradayPercent)}{absFmt(intradayPercent)}%
                         </p>

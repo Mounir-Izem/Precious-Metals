@@ -1,7 +1,7 @@
 const SpotSelectors = ({ unit, currency, setUnit, setCurrency }) => {
 
-    const activeClass = 'bg-yellow-700 text-white border-yellow-700 rounded-full px-3 py-1 text-sm';
-    const inactiveClass = 'border border-gray-300 rounded-full px-3 py-1 text-sm';
+    const activeClass = 'bg-yellow-700 text-white border-yellow-700 rounded-full px-3 py-1 text-sm transition-colors duration-150';
+    const inactiveClass = 'border border-gray-600 text-gray-300 rounded-full px-3 py-1 text-sm transition-colors duration-150';
 
 
     return (
@@ -18,7 +18,7 @@ const SpotSelectors = ({ unit, currency, setUnit, setCurrency }) => {
                 className={currency === 'GBP' ? activeClass : inactiveClass}
                 onClick={() => setCurrency('GBP')}>GBP
             </button>
-            <div className="w-px h-6 bg-gray-300 mx-1"/>
+            <div className="w-px h-6 bg-gray-600 mx-1"/>
             <button
                 className={unit === 'oz' ? activeClass : inactiveClass}
                 onClick={() => setUnit('oz')}>oz
