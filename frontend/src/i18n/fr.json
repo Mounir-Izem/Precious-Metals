@@ -1,9 +1,6 @@
 {
   "metalCard": {
-    "variation": "Variation J/J",
-    "amFixing": "Fixing Matin",
-    "pmFixing": "Fixing Après-midi",
-    "intraday": "variation Matin/Après-midi"
+    "variation": "Variation J/J"
   },
   "metals": {
     "gold": "Or",
@@ -13,32 +10,37 @@
     "disclaimer": "Les prix sont fournis à titre indicatif uniquement"
   },
   "priceCheck": {
-  "manual_review": {
-    "message": "Ce produit ne peut pas être évalué de manière fiable pour cet objectif."
-  },
-  "warnings": {
-    "unsupported_intent": "Cet objectif n'est pas typiquement associé à ce type de produit.",
-    "missing_thresholds": "Aucune grille de lecture spécifique n'est définie pour cet objectif sur ce type de produit."
-  },
-  "messages": {
-    "below_spot": {
-      "default": "Le prix est inférieur à la valeur métal, ce qui est atypique pour ce type de produit."
+    "intents": {
+      "stacking": "stacking",
+      "semi_stack": "semi-stack",
+      "liquidity": "liquidité"
     },
-    "within_range_low": {
-      "gold": "Dans une logique de {{intent}}, l'écart au métal reste faible pour ce type d'or.",
-      "silver": "Dans une logique de {{intent}}, le prix reste proche de la valeur métal pour ce type d'argent."
+    "manual_review": {
+      "message": "Ce produit ne peut pas être évalué de manière fiable pour cet objectif."
     },
-    "within_range_high": {
-      "gold": "Dans une logique de {{intent}}, l'écart au métal reste présent mais cohérent pour ce type d'or.",
-      "silver": "Dans une logique de {{intent}}, l'écart au métal reste dans une zone encore cohérente pour ce type d'argent."
+    "warnings": {
+      "unsupported_intent": "Cet objectif n'est pas typiquement associé à ce type de produit.",
+      "missing_thresholds": "Aucune grille de lecture spécifique n'est définie pour cet objectif sur ce type de produit."
     },
-    "borderline": {
-      "default": "L'écart au métal commence à s'éloigner de la zone habituellement observée pour cet objectif."
-    },
-    "above_range": {
-      "gold": "Dans une logique de {{intent}}, l'écart au métal dépasse ce qui est généralement observé pour ce type d'or.",
-      "silver": "Dans une logique de {{intent}}, l'écart au métal dépasse ce qui est généralement recherché pour ce type d'argent."
+    "messages": {
+      "below_spot": {
+        "default": "Le prix est inférieur à la valeur métal, ce qui est atypique pour ce type de produit."
+      },
+      "within_range_low": {
+        "gold": "Dans une logique de {{intent}}, l'écart au métal reste faible pour ce type d'or.",
+        "silver": "Dans une logique de {{intent}}, le prix reste proche de la valeur métal pour ce type d'argent."
+      },
+      "within_range_high": {
+        "gold": "Dans une logique de {{intent}}, l'écart au métal reste présent mais cohérent pour ce type d'or.",
+        "silver": "Dans une logique de {{intent}}, l'écart au métal reste dans une zone encore cohérente pour ce type d'argent."
+      },
+      "borderline": {
+        "default": "L'écart au métal commence à s'éloigner de la zone habituellement observée pour cet objectif."
+      },
+      "above_range": {
+        "gold": "Dans une logique de {{intent}}, l'écart au métal dépasse ce qui est généralement observé pour ce type d'or.",
+        "silver": "Dans une logique de {{intent}}, l'écart au métal dépasse ce qui est généralement recherché pour ce type d'argent."
+      }
     }
   }
-}
 }

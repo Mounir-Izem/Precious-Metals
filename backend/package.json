@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "start": "prisma generate && prisma migrate deploy && node src/index.js",
+    "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "test": "vitest"
   },
@@ -15,23 +15,20 @@
     "precious",
     "metals",
     "spot",
-    "price",
-    "LBMA"
+    "price"
   ],
   "author": "Mounir Izem",
   "license": "MIT",
   "dependencies": {
-    "@prisma/client": "^5.22.0",
     "cors": "^2.8.6",
+    "dotenv": "^16.5.0",
     "express": "^5.2.1",
     "express-rate-limit": "^8.3.1",
     "helmet": "^8.1.0",
-    "node-cron": "^4.2.1",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "nodemon": "^3.1.14",
-    "prisma": "^5.22.0",
     "supertest": "^7.2.2",
     "vitest": "^4.1.2"
   }

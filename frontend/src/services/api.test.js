@@ -1,19 +1,17 @@
 import { describe, it, expect, vi } from "vitest";
-import { getSpotData, getSpotVariation } from "./api";
+import { getSpotData } from "./api";
 
-// Tests pour getSpotData
 describe("getSpotData", () => {
     it("should return data on success", async () => {
         global.fetch = vi.fn().mockResolvedValue({
             ok: true,
-            json: async () => ({ price: 100 }),
+            json: async () => ({ gold: { oz_usd: 3120.50 }, silver: { oz_usd: 34.20 } }),
         });
 
         const data = await getSpotData();
-        expect(data).toEqual({ price: 100 });
-
+        expect(data).toEqual({ gold: { oz_usd: 3120.50 }, silver: { oz_usd: 34.20 } });
     });
-    it('should retun server error', async () => {
+    it('should return null on server error', async () => {
         global.fetch = vi.fn().mockResolvedValue({
             ok: false,
         });
@@ -27,32 +25,4 @@ describe("getSpotData", () => {
         const data = await getSpotData();
         expect(data).toBeNull();
     });
-});
-
-// Tests pour getSpotVariation
-describe("getSpotVariation", () => {
-    it("should return data on success", async () => {
-        global.fetch = vi.fn().mockResolvedValue({
-            ok: true,
-            json: async () => ({ variation: 5 }),
-        });
-
-        const data = await getSpotVariation();
-        expect(data).toEqual({ variation: 5 });
-    });
-    it('should retun server error', async () => {
-        global.fetch = vi.fn().mockResolvedValue({
-            ok: false,
-        });
-
-        const data = await getSpotVariation();
-        expect(data).toBeNull();
-    });
-    it('should return null on network error', async () => {
-        global.fetch = vi.fn().mockRejectedValue(new Error('Network error'));
-
-        const data = await getSpotVariation();
-        expect(data).toBeNull();
-    });
-
 });

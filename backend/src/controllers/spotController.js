@@ -1,34 +1,11 @@
-import { getLatestSpotWithVariation, getSpotToday } from '../services/spotService.js';
+import { getSpot } from '../services/spotService.js';
 
-
-const getLatestSpot = async (_req, res) => {
+export const getLatestSpot = async (_req, res) => {
     try {
-        const lastSpotVar = await getLatestSpotWithVariation();
-
-        if (!lastSpotVar) {
-            return res.status(404).json({ 'status': 'Not enough data' })
-        }
-
-        res.json(lastSpotVar);
-
+        const spot = await getSpot();
+        res.json(spot);
     } catch (error) {
-        res.status(500).json({ 'status': 'Unavaliable variation' })
+        console.error(error);
+        res.status(500).json({ status: 'Service unavailable' });
     }
-}
-
-const getTodaySpot = async (_req, res) => {
-    try {
-        const todaySpot = await getSpotToday();
-
-        if (!todaySpot) {
-            return res.status(404).json({'status': 'Not enough data'})
-        }
-
-        res.json(todaySpot)
-
-    } catch (error) {
-        res.status(500).json({ 'status': 'Unavaliable latest date' })
-    }
-}
-
-export { getLatestSpot, getTodaySpot };
+};

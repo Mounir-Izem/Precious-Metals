@@ -1,9 +1,8 @@
-import express from 'express'
-import * as spotController from '../controllers/spotController.js'
+import express from 'express';
+import { getLatestSpot } from '../controllers/spotController.js';
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/variation', spotController.getLatestSpot)
-router.get('/latest', spotController.getTodaySpot)
+router.get('/latest', getLatestSpot);
 
-export { router }
+export { router };
