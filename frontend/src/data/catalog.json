@@ -1,17 +1,11 @@
 {
-  "catalog_version": "1.2.0-sealed",
+  "catalog_version": "2.0.0",
   "catalog_scope": "invest_stacking_with_collection_sensitivity",
   "base_currency_logic": "spot_relative",
   "supported_user_intents": [
     "stacking",
     "semi_stack",
     "liquidity"
-  ],
-  "verdict_scale": [
-    "good_deal",
-    "fair",
-    "expensive",
-    "manual_review_required"
   ],
   "pricing_engines": {
     "spot_plus_premium": {
@@ -751,7 +745,7 @@
         "liquidity_tier": "high",
         "year_sensitivity": "low",
         "condition_sensitivity": "low",
-        "collection_sensitivity": "low_to_medium",
+        "collection_sensitivity": "medium",
         "auto_verdict_default": true
       },
       "supported_intents": [
@@ -1057,9 +1051,9 @@
         "pricing_engine": "spot_plus_premium",
         "primary_market_position": "investment",
         "liquidity_tier": "high",
-        "year_sensitivity": "low_to_medium",
+        "year_sensitivity": "medium",
         "condition_sensitivity": "low",
-        "collection_sensitivity": "low_to_medium",
+        "collection_sensitivity": "medium",
         "auto_verdict_default": true
       },
       "supported_intents": [
@@ -1443,7 +1437,7 @@
         "liquidity_tier": "high",
         "year_sensitivity": "low",
         "condition_sensitivity": "low",
-        "collection_sensitivity": "low_to_medium",
+        "collection_sensitivity": "medium",
         "auto_verdict_default": true
       },
       "supported_intents": [
@@ -1613,7 +1607,7 @@
         "liquidity_tier": "high",
         "year_sensitivity": "medium",
         "condition_sensitivity": "low",
-        "collection_sensitivity": "low_to_medium",
+        "collection_sensitivity": "medium",
         "auto_verdict_default": true
       },
       "supported_intents": [
@@ -1740,7 +1734,6 @@
         {
           "variant_code": "50f_hercule",
           "variant_label": "50 Francs Hercule",
-          "aliases": ["50 francs hercule", "50f hercule", "hercule 50", "50 francs argent", "50f argent", "50 francs semeuse"],
           "year_from": 1974,
           "year_to": 1980,
           "gross_weight_g": 30.0,
@@ -1765,7 +1758,6 @@
         {
           "variant_code": "10f_hercule",
           "variant_label": "10 Francs Hercule",
-          "aliases": ["10 francs hercule", "10f hercule", "hercule 10", "10 francs argent", "10f argent", "10 francs semeuse"],
           "year_from": 1965,
           "year_to": 1973,
           "gross_weight_g": 25.0,
@@ -1790,7 +1782,6 @@
         {
           "variant_code": "5f_semeuse",
           "variant_label": "5 Francs Semeuse",
-          "aliases": ["5f semeuse", "semeuse 5", "5 francs argent", "5 francs semeuse"],
           "year_from": 1960,
           "year_to": 1969,
           "gross_weight_g": 12.0,
@@ -1815,7 +1806,6 @@
         {
           "variant_code": "2f_semeuse",
           "variant_label": "2 Francs Semeuse",
-          "aliases": ["2f semeuse", "semeuse 2", "2 francs argent", "2 francs semeuse"],
           "year_from": 1898,
           "year_to": 1920,
           "gross_weight_g": 10.0,
@@ -1840,7 +1830,6 @@
         {
           "variant_code": "1f_semeuse",
           "variant_label": "1 Franc Semeuse",
-          "aliases": ["1f semeuse", "semeuse 1", "1 franc argent", "1f argent", "1 francs semeuse"],
           "year_from": 1898,
           "year_to": 1920,
           "gross_weight_g": 5.0,
@@ -1865,7 +1854,6 @@
         {
           "variant_code": "50c_semeuse",
           "variant_label": "50 Centimes Semeuse",
-          "aliases": ["50c semeuse", "semeuse 50", "50 centimes argent", "50c argent", "50 centimes semeuse"],
           "year_from": 1897,
           "year_to": 1920,
           "gross_weight_g": 2.5,

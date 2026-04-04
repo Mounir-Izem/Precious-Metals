@@ -1,325 +1,161 @@
 {
-  "verdict_policy_version": "1.2.0",
+  "verdict_policy_version": "2.0.0",
   "policy_scope": "invest_stacking_with_collection_sensitivity",
-  "single_threshold_source": "verdict_policy",
-  "policy_resolution_order": [
-    "family_overrides",
-    "intent_thresholds"
+  "purpose": "Defines evaluation thresholds, manual review triggers, non-blocking warnings, and explanatory message templates for the price-check engine.",
+  "positions": [
+    "below_spot",
+    "within_range_low",
+    "within_range_high",
+    "borderline",
+    "above_range"
   ],
-  "supported_verdicts": [
-    "good_deal",
-    "fair",
-    "expensive",
-    "manual_review_required"
-  ],
-  "error_code_registry": [
-    "unknown_family",
-    "unknown_variant",
-    "unsupported_intent",
-    "missing_spot_price",
-    "invalid_quantity",
-    "invalid_ask_price",
-    "invalid_spot_price",
-    "catalog_resolution_failed",
-    "policy_resolution_failed",
-    "non_precious_metal_detected",
-    "unsupported_non_precious_coin"
-  ],
-  "pricing_engine_handlers": {
-    "spot_plus_premium": {
-      "formula": {
-        "melt_value": "fine_weight_total_g * spot_price_per_g_fine",
-        "premium_value": "ask_price - melt_value",
-        "premium_pct": "(premium_value / melt_value) * 100"
+  "thresholds": {
+    "gold": {
+      "bullion": {
+        "stacking": {
+          "low_max": 5,
+          "high_max": 10
+        },
+        "semi_stack": {
+          "low_max": 10,
+          "high_max": 20
+        },
+        "liquidity": {
+          "low_max": 8,
+          "high_max": 15
+        }
       },
-      "required_inputs": [
-        "ask_price",
-        "spot_price_per_g_fine",
-        "fine_weight_total_g"
-      ]
-    },
-    "melt_value": {
-      "formula": {
-        "melt_value": "fine_weight_total_g * spot_price_per_g_fine",
-        "premium_value": "ask_price - melt_value",
-        "premium_pct": "(premium_value / melt_value) * 100"
+      "historical_bullion": {
+        "stacking": {
+          "low_max": 10,
+          "high_max": 18
+        },
+        "semi_stack": {
+          "low_max": 15,
+          "high_max": 25
+        },
+        "liquidity": {
+          "low_max": 10,
+          "high_max": 18
+        }
       },
-      "required_inputs": [
-        "ask_price",
-        "spot_price_per_g_fine",
-        "fine_weight_total_g"
-      ]
-    },
-    "manual_only": {
-      "formula": null,
-      "required_inputs": [
-        "ask_price"
-      ]
-    }
-  },
-  "intent_thresholds": {
-    "stacking": {
-      "good_deal_max_pct": 5,
-      "fair_max_pct": 10
-    },
-    "semi_stack": {
-      "good_deal_max_pct": 10,
-      "fair_max_pct": 18
-    },
-    "liquidity": {
-      "good_deal_max_pct": 8,
-      "fair_max_pct": 14
-    }
-  },
-  "family_overrides": {
-    "gold-sovereign-family": {
-      "stacking": {
-        "good_deal_max_pct": 6,
-        "fair_max_pct": 10
-      },
-      "liquidity": {
-        "good_deal_max_pct": 8,
-        "fair_max_pct": 12
+      "semi": {
+        "stacking": {
+          "low_max": 15,
+          "high_max": 25
+        },
+        "semi_stack": {
+          "low_max": 25,
+          "high_max": 40
+        }
       }
     },
-    "gold-10f-france-family": {
-      "stacking": {
-        "good_deal_max_pct": 7,
-        "fair_max_pct": 12
+    "silver": {
+      "bullion": {
+        "stacking": {
+          "low_max": 10,
+          "high_max": 15
+        },
+        "semi_stack": {
+          "low_max": 15,
+          "high_max": 30
+        },
+        "liquidity": {
+          "low_max": 5,
+          "high_max": 10,
+          "limit_max": 15
+        }
       },
-      "liquidity": {
-        "good_deal_max_pct": 9,
-        "fair_max_pct": 14
-      }
-    },
-    "gold-20f-france-family": {
-      "stacking": {
-        "good_deal_max_pct": 6,
-        "fair_max_pct": 10
+      "junk": {
+        "stacking": {
+          "low_max": 0,
+          "high_max": 8
+        },
+        "semi_stack": {
+          "low_max": 8,
+          "high_max": 15
+        },
+        "liquidity": {
+          "low_max": 3,
+          "high_max": 8
+        }
       },
-      "liquidity": {
-        "good_deal_max_pct": 8,
-        "fair_max_pct": 12
-      }
-    },
-    "gold-20f-switzerland-family": {
-      "stacking": {
-        "good_deal_max_pct": 6,
-        "fair_max_pct": 10
-      },
-      "semi_stack": {
-        "good_deal_max_pct": 10,
-        "fair_max_pct": 15
-      },
-      "liquidity": {
-        "good_deal_max_pct": 8,
-        "fair_max_pct": 12
-      }
-    },
-    "gold-krugerrand-family": {
-      "stacking": {
-        "good_deal_max_pct": 4,
-        "fair_max_pct": 8
-      },
-      "liquidity": {
-        "good_deal_max_pct": 6,
-        "fair_max_pct": 10
-      }
-    },
-    "gold-maple-leaf-family": {
-      "stacking": {
-        "good_deal_max_pct": 4,
-        "fair_max_pct": 8
-      },
-      "liquidity": {
-        "good_deal_max_pct": 6,
-        "fair_max_pct": 10
-      }
-    },
-    "silver-maple-leaf-family": {
-      "stacking": {
-        "good_deal_max_pct": 8,
-        "fair_max_pct": 15
-      },
-      "liquidity": {
-        "good_deal_max_pct": 10,
-        "fair_max_pct": 18
-      }
-    },
-    "gold-kangaroo-family": {
-      "stacking": {
-        "good_deal_max_pct": 5,
-        "fair_max_pct": 9
-      },
-      "liquidity": {
-        "good_deal_max_pct": 7,
-        "fair_max_pct": 11
-      }
-    },
-    "silver-kangaroo-family": {
-      "stacking": {
-        "good_deal_max_pct": 8,
-        "fair_max_pct": 15
-      },
-      "liquidity": {
-        "good_deal_max_pct": 10,
-        "fair_max_pct": 18
-      }
-    },
-    "silver-kookaburra-family": {
-      "semi_stack": {
-        "good_deal_max_pct": 12,
-        "fair_max_pct": 20
-      },
-      "liquidity": {
-        "good_deal_max_pct": 12,
-        "fair_max_pct": 20
-      }
-    },
-    "gold-britannia-family": {
-      "stacking": {
-        "good_deal_max_pct": 4,
-        "fair_max_pct": 8
-      },
-      "liquidity": {
-        "good_deal_max_pct": 6,
-        "fair_max_pct": 10
-      }
-    },
-    "silver-britannia-family": {
-      "stacking": {
-        "good_deal_max_pct": 8,
-        "fair_max_pct": 15
-      },
-      "liquidity": {
-        "good_deal_max_pct": 10,
-        "fair_max_pct": 18
-      }
-    },
-    "gold-philharmonic-family": {
-      "stacking": {
-        "good_deal_max_pct": 4,
-        "fair_max_pct": 8
-      },
-      "liquidity": {
-        "good_deal_max_pct": 6,
-        "fair_max_pct": 10
-      }
-    },
-    "silver-philharmonic-family": {
-      "stacking": {
-        "good_deal_max_pct": 8,
-        "fair_max_pct": 15
-      },
-      "liquidity": {
-        "good_deal_max_pct": 10,
-        "fair_max_pct": 18
-      }
-    },
-    "gold-american-eagle-family": {
-      "stacking": {
-        "good_deal_max_pct": 5,
-        "fair_max_pct": 9
-      },
-      "liquidity": {
-        "good_deal_max_pct": 7,
-        "fair_max_pct": 11
-      }
-    },
-    "silver-american-eagle-family": {
-      "stacking": {
-        "good_deal_max_pct": 10,
-        "fair_max_pct": 18
-      },
-      "liquidity": {
-        "good_deal_max_pct": 12,
-        "fair_max_pct": 20
-      }
-    },
-    "gold-20usd-family": {
-      "stacking": {
-        "good_deal_max_pct": 6,
-        "fair_max_pct": 10
-      },
-      "liquidity": {
-        "good_deal_max_pct": 8,
-        "fair_max_pct": 12
-      }
-    },
-    "gold-50pesos-mex-family": {
-      "stacking": {
-        "good_deal_max_pct": 4,
-        "fair_max_pct": 8
-      },
-      "liquidity": {
-        "good_deal_max_pct": 6,
-        "fair_max_pct": 10
-      }
-    },
-    "silver-france-junk-family": {
-      "stacking": {
-        "good_deal_max_pct": 8,
-        "fair_max_pct": 15
-      },
-      "liquidity": {
-        "good_deal_max_pct": 10,
-        "fair_max_pct": 18
+      "semi": {
+        "stacking": {
+          "low_max": 20,
+          "high_max": 35
+        },
+        "semi_stack": {
+          "low_max": 30,
+          "high_max": 50
+        }
       }
     }
   },
   "manual_review_rules": {
-    "force_manual_if": [
+    "trigger_conditions": [
       {
-        "condition": "pricing_engine == manual_only",
-        "manual_reason": "collection_sensitive_product"
+        "field": "pricing_engine",
+        "operator": "equals",
+        "value": "manual_only",
+        "reason_code": "manual_only"
       },
       {
-        "condition": "family.trade_profile.collection_sensitivity == high",
-        "manual_reason": "high_collection_variability"
+        "field": "collection_sensitivity",
+        "operator": "equals",
+        "value": "high",
+        "reason_code": "high_collection_sensitivity"
       },
       {
-        "condition": "family.trade_profile.year_sensitivity == high",
-        "manual_reason": "year_dependent_value"
+        "field": "year_sensitivity",
+        "operator": "equals",
+        "value": "high",
+        "reason_code": "high_year_sensitivity"
       },
       {
-        "condition": "missing_required_inputs == true",
-        "manual_reason": "insufficient_data"
-      },
-      {
-        "condition": "invalid_spot_price == true",
-        "manual_reason": "invalid_spot_price"
+        "field": "condition_sensitivity",
+        "operator": "equals",
+        "value": "high",
+        "reason_code": "high_condition_sensitivity"
       }
-    ]
+    ],
+    "message_template": "Ce produit ne peut pas être évalué de manière fiable pour cet objectif."
   },
-  "manual_reason_to_verdict_code": {
-    "collection_sensitive_product": "manual_engine",
-    "high_collection_variability": "manual_collection_sensitivity",
-    "year_dependent_value": "manual_year_sensitivity",
-    "insufficient_data": "manual_missing_data",
-    "invalid_spot_price": "manual_invalid_spot"
+  "warning_rules": {
+    "unsupported_intent": {
+      "behavior": "allow_with_warning",
+      "message_template": "Cet objectif n'est pas typiquement associé à ce type de produit."
+    },
+    "missing_thresholds_for_archetype": {
+      "behavior": "allow_with_warning",
+      "message_template": "Aucune grille de lecture spécifique n'est définie pour cet objectif sur ce type de produit."
+    }
   },
-  "verdict_mapping": {
-    "rules": [
-      {
-        "condition": "premium_pct < 0",
-        "verdict": "good_deal",
-        "verdict_code": "below_spot"
-      },
-      {
-        "condition": "premium_pct <= good_deal_max_pct",
-        "verdict": "good_deal",
-        "verdict_code": "within_good_deal_threshold"
-      },
-      {
-        "condition": "premium_pct <= fair_max_pct",
-        "verdict": "fair",
-        "verdict_code": "within_fair_threshold"
-      },
-      {
-        "condition": "premium_pct > fair_max_pct",
-        "verdict": "expensive",
-        "verdict_code": "above_fair_threshold"
-      }
-    ]
-  }
+  "message_templates": {
+    "below_spot": {
+      "default": "Le prix est inférieur à la valeur métal, ce qui est atypique pour ce type de produit."
+    },
+    "within_range_low": {
+      "gold": "Dans une logique de {intent}, l’écart au métal reste faible pour ce type d’or.",
+      "silver": "Dans une logique de {intent}, le prix reste proche de la valeur métal pour ce type d’argent."
+    },
+    "within_range_high": {
+      "gold": "Dans une logique de {intent}, l’écart au métal reste présent mais cohérent pour ce type d’or.",
+      "silver": "Dans une logique de {intent}, l’écart au métal reste dans une zone encore cohérente pour ce type d’argent."
+    },
+    "borderline": {
+      "default": "L’écart au métal commence à s’éloigner de la zone habituellement observée pour cet objectif."
+    },
+    "above_range": {
+      "gold": "Dans une logique de {intent}, l’écart au métal dépasse ce qui est généralement observé pour ce type d’or.",
+      "silver": "Dans une logique de {intent}, l’écart au métal dépasse ce qui est généralement recherché pour ce type d’argent."
+    }
+  },
+  "engine_notes": [
+    "No short verdict labels are exposed to the user.",
+    "below_spot is evaluated before threshold comparison.",
+    "Threshold resolution depends on metal, archetype, and intent.",
+    "manual_review is a runtime status, not a verdict.",
+    "Warnings are non-blocking and may coexist with evaluated or manual_review."
+  ]
 }

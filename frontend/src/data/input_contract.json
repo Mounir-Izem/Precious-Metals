@@ -1,6 +1,7 @@
 {
-  "input_contract_version": "1.2.0",
+  "input_contract_version": "2.0.0",
   "contract_scope": "verdict_engine_input",
+  "purpose": "Defines the normalized input required by the price-check engine before evaluation.",
   "required_fields": [
     "family_id",
     "variant_code",
@@ -82,19 +83,19 @@
     "enabled": true,
     "policy_ref": "preclassification_policy.json",
     "steps": [
-      "1. inspect raw_title and/or ocr_text if present",
-      "2. apply preclassification rules",
-      "3. reject obvious non-precious cases before catalog resolution",
-      "4. continue only if no blocking preclassification rule matched"
+      "inspect raw_title and/or ocr_text if present",
+      "apply preclassification rules",
+      "reject obvious non-precious cases before catalog resolution",
+      "continue only if no blocking preclassification rule matched"
     ]
   },
   "resolution_rules": {
     "steps": [
-      "1. find family by family_id",
-      "2. find variant by variant_code",
-      "3. load pricing_engine from family.trade_profile",
-      "4. validate required inputs based on pricing_engine",
-      "5. enrich input with catalog data"
+      "find family by family_id",
+      "find variant by variant_code",
+      "load pricing_engine from family.trade_profile",
+      "validate required inputs based on pricing_engine",
+      "enrich input with catalog data"
     ]
   },
   "resolution_outputs": [
@@ -113,16 +114,15 @@
   ],
   "derived_fields": {
     "unit_price": {
-      "formula": "ask_price / quantity"
+      "description": "Derived from ask_price and quantity in engine code."
     },
     "fine_weight_total_g": {
-      "formula": "variant.fine_weight_g * quantity"
+      "description": "Derived from variant.fine_weight_g and quantity in engine code."
     }
   },
-  "error_code_registry": [
+  "blocking_error_codes": [
     "unknown_family",
     "unknown_variant",
-    "unsupported_intent",
     "missing_spot_price",
     "invalid_quantity",
     "invalid_ask_price",
@@ -132,6 +132,10 @@
     "non_precious_metal_detected",
     "unsupported_non_precious_coin"
   ],
+  "warning_codes": [
+    "unsupported_intent",
+    "missing_thresholds_for_archetype"
+  ],
   "validation_rules": [
     {
       "rule": "family must exist",
@@ -140,10 +144,6 @@
     {
       "rule": "variant must exist in family",
       "error_code": "unknown_variant"
-    },
-    {
-      "rule": "user_intent must be supported by family",
-      "error_code": "unsupported_intent"
     },
     {
       "rule": "spot_price_per_g_fine required if pricing_engine != manual_only",
@@ -160,6 +160,10 @@
     {
       "rule": "spot_price_per_g_fine must be > 0 when present",
       "error_code": "invalid_spot_price"
+    },
+    {
+      "rule": "user_intent not supported by family => continue_with_warning",
+      "warning_code": "unsupported_intent"
     }
   ],
   "normalization_rules": {
@@ -171,7 +175,7 @@
     }
   },
   "rejection_policy": {
-    "on_error": "reject_input",
+    "on_blocking_error": "reject_input",
     "on_warning": "allow_with_flag"
   }
 }

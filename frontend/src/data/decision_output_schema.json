@@ -1,108 +1,258 @@
 {
-  "decision_output_schema_version": "1.2.0",
-  "schema_scope": "verdict_engine_output",
-  "required_fields": [
-    "success",
-    "verdict",
-    "verdict_code",
-    "input_ref",
-    "product_ref",
-    "pricing_context",
-    "computed_values",
-    "applied_policy",
-    "explanation"
-  ],
-  "field_definitions": {
-    "success": {
-      "type": "boolean"
-    },
-    "verdict": {
+  "schema_name": "decision_output_schema",
+  "schema_version": "2.0.0",
+  "purpose": "Defines the final output contract of the Price-Check engine for all runtime statuses.",
+  "top_level_fields": {
+    "status": {
       "type": "string",
+      "required": true,
       "allowed_values": [
-        "good_deal",
-        "fair",
-        "expensive",
-        "manual_review_required"
+        "incomplete",
+        "error",
+        "manual_review",
+        "evaluated"
       ]
     },
-    "verdict_code": {
-      "type": "string",
-      "allowed_values": [
-        "below_spot",
-        "within_good_deal_threshold",
-        "within_fair_threshold",
-        "above_fair_threshold",
-        "manual_engine",
-        "manual_collection_sensitivity",
-        "manual_year_sensitivity",
-        "manual_missing_data",
-        "manual_invalid_spot",
-        "manual_unsupported_case"
-      ]
+    "product": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": true,
+      "description": "Resolved product context when available."
     },
-    "scan_assessment": {
-      "type": "object",
-      "optional": true
+    "pricing": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": true,
+      "description": "Computed pricing values. Present only for evaluated and manual_review."
+    },
+    "analysis": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": true,
+      "description": "Interpretive layer of the engine. Present only for evaluated and manual_review."
+    },
+    "manual_review": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": true,
+      "description": "Present only when status = manual_review."
+    },
+    "warnings": {
+      "type": "array",
+      "required": true,
+      "items_type": "object"
+    },
+    "error": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": true,
+      "description": "Present only when status = error."
+    },
+    "missing_fields": {
+      "type": "array",
+      "required": true,
+      "items_type": "string",
+      "description": "Present only when status = incomplete, otherwise empty array."
     }
   },
-  "applied_policy_requirements": {
-    "required_fields": [
-      "intent",
-      "good_deal_max_pct",
-      "fair_max_pct",
-      "family_override_applied",
-      "manual_review_triggered",
-      "threshold_source",
-      "threshold_source_ref"
-    ]
+  "shared_objects": {
+    "product": {
+      "fields": {
+        "family_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false
+        },
+        "variant_code": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false
+        },
+        "metal": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "allowed_values": [
+            "gold",
+            "silver"
+          ]
+        },
+        "archetype": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "allowed_values": [
+            "bullion",
+            "historical_bullion",
+            "semi",
+            "junk",
+            "manual_review"
+          ]
+        }
+      }
+    },
+    "pricing": {
+      "fields": {
+        "melt_value": {
+          "type": "number",
+          "required": true
+        },
+        "premium_value": {
+          "type": "number",
+          "required": true
+        },
+        "premium_pct": {
+          "type": "number",
+          "required": true
+        }
+      }
+    },
+    "analysis_evaluated": {
+      "fields": {
+        "intent": {
+          "type": "string",
+          "required": true,
+          "allowed_values": [
+            "stacking",
+            "semi_stack",
+            "liquidity"
+          ]
+        },
+        "position": {
+          "type": "string",
+          "required": true,
+          "allowed_values": [
+            "below_spot",
+            "within_range_low",
+            "within_range_high",
+            "borderline",
+            "above_range"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "required": true
+        }
+      }
+    },
+    "analysis_manual_review": {
+      "fields": {
+        "intent": {
+          "type": "string",
+          "required": true,
+          "allowed_values": [
+            "stacking",
+            "semi_stack",
+            "liquidity"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "required": true
+        }
+      }
+    },
+    "manual_review": {
+      "fields": {
+        "reason_code": {
+          "type": "string",
+          "required": true,
+          "allowed_values": [
+            "manual_only",
+            "high_collection_sensitivity",
+            "high_year_sensitivity",
+            "high_condition_sensitivity",
+            "not_reliably_modelled_for_intent"
+          ]
+        }
+      }
+    },
+    "warning": {
+      "fields": {
+        "code": {
+          "type": "string",
+          "required": true
+        },
+        "message": {
+          "type": "string",
+          "required": true
+        }
+      }
+    },
+    "error": {
+      "fields": {
+        "code": {
+          "type": "string",
+          "required": true
+        },
+        "message": {
+          "type": "string",
+          "required": true
+        }
+      }
+    }
   },
-  "scan_assessment_schema": {
-    "required_fields": [
-      "performed",
-      "scan_mode",
-      "design_match_confidence",
-      "diameter_check_result",
-      "ocr_detected_text",
-      "scan_flags"
-    ],
-    "allowed_scan_mode_values": [
-      "none",
-      "assistive_camera",
-      "assistive_image_upload"
-    ],
-    "allowed_diameter_check_values": [
-      "not_run",
-      "pass",
-      "fail",
-      "inconclusive"
-    ]
+  "status_rules": {
+    "incomplete": {
+      "product": "object_or_null",
+      "pricing": null,
+      "analysis": null,
+      "manual_review": null,
+      "warnings": [],
+      "error": null,
+      "missing_fields": "non_empty_array"
+    },
+    "error": {
+      "product": "object_or_null",
+      "pricing": null,
+      "analysis": null,
+      "manual_review": null,
+      "warnings": [],
+      "error": "required_object",
+      "missing_fields": []
+    },
+    "manual_review": {
+      "product": "required_object",
+      "pricing": "required_object",
+      "analysis": "required_object_matching_analysis_manual_review",
+      "manual_review": "required_object",
+      "warnings": "array",
+      "error": null,
+      "missing_fields": []
+    },
+    "evaluated": {
+      "product": "required_object",
+      "pricing": "required_object",
+      "analysis": "required_object_matching_analysis_evaluated",
+      "manual_review": null,
+      "warnings": "array",
+      "error": null,
+      "missing_fields": []
+    }
   },
-  "consistency_rules": [
-    "if verdict = manual_review_required => applied_policy.manual_review_triggered must be true",
-    "if verdict = manual_review_required => verdict_code must start with manual_",
-    "if pricing_context.pricing_engine != manual_only and success = true => computed_values.melt_value must be numeric",
-    "if pricing_context.pricing_engine != manual_only and success = true => computed_values.premium_value must be numeric",
-    "if pricing_context.pricing_engine != manual_only and success = true => computed_values.premium_pct must be numeric",
-    "if applied_policy.family_override_applied = true => explanation.reason_tags should include family_override"
-  ],
-  "recommended_error_output_schema": {
-    "required_fields": [
-      "success",
-      "error_code",
-      "message"
-    ],
-    "allowed_error_codes": [
-      "unknown_family",
-      "unknown_variant",
-      "unsupported_intent",
-      "missing_spot_price",
-      "invalid_quantity",
-      "invalid_ask_price",
-      "invalid_spot_price",
-      "catalog_resolution_failed",
-      "policy_resolution_failed",
-      "non_precious_metal_detected",
-      "unsupported_non_precious_coin"
-    ]
-  }
+  "engine_notes": [
+    "manual_review is a runtime status, not a verdict.",
+    "No short verdict labels are exposed to the user in this schema.",
+    "User-facing interpretation is carried by analysis.position + analysis.message.",
+    "Pricing remains visible in manual_review.",
+    "Warnings are non-blocking and may coexist with evaluated or manual_review."
+  ]
 }
