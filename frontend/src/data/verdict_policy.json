@@ -119,38 +119,34 @@
         "reason_code": "high_condition_sensitivity"
       }
     ],
-    "message_template": "Ce produit ne peut pas être évalué de manière fiable pour cet objectif."
+    "message_template": "priceCheck.manual_review.message"
   },
   "warning_rules": {
     "unsupported_intent": {
       "behavior": "allow_with_warning",
-      "message_template": "Cet objectif n'est pas typiquement associé à ce type de produit."
+      "message_template": "priceCheck.warnings.unsupported_intent"
     },
     "missing_thresholds_for_archetype": {
       "behavior": "allow_with_warning",
-      "message_template": "Aucune grille de lecture spécifique n'est définie pour cet objectif sur ce type de produit."
+      "message_template": "priceCheck.warnings.missing_thresholds"
     }
   },
   "message_templates": {
-    "below_spot": {
-      "default": "Le prix est inférieur à la valeur métal, ce qui est atypique pour ce type de produit."
-    },
-    "within_range_low": {
-      "gold": "Dans une logique de {intent}, l’écart au métal reste faible pour ce type d’or.",
-      "silver": "Dans une logique de {intent}, le prix reste proche de la valeur métal pour ce type d’argent."
-    },
-    "within_range_high": {
-      "gold": "Dans une logique de {intent}, l’écart au métal reste présent mais cohérent pour ce type d’or.",
-      "silver": "Dans une logique de {intent}, l’écart au métal reste dans une zone encore cohérente pour ce type d’argent."
-    },
-    "borderline": {
-      "default": "L’écart au métal commence à s’éloigner de la zone habituellement observée pour cet objectif."
-    },
-    "above_range": {
-      "gold": "Dans une logique de {intent}, l’écart au métal dépasse ce qui est généralement observé pour ce type d’or.",
-      "silver": "Dans une logique de {intent}, l’écart au métal dépasse ce qui est généralement recherché pour ce type d’argent."
-    }
+  "below_spot": { "default": "priceCheck.messages.below_spot.default" },
+  "within_range_low": {
+    "gold": "priceCheck.messages.within_range_low.gold",
+    "silver": "priceCheck.messages.within_range_low.silver"
   },
+  "within_range_high": {
+    "gold": "priceCheck.messages.within_range_high.gold",
+    "silver": "priceCheck.messages.within_range_high.silver"
+  },
+  "borderline": { "default": "priceCheck.messages.borderline.default" },
+  "above_range": {
+    "gold": "priceCheck.messages.above_range.gold",
+    "silver": "priceCheck.messages.above_range.silver"
+  }
+},
   "engine_notes": [
     "No short verdict labels are exposed to the user.",
     "below_spot is evaluated before threshold comparison.",

@@ -56,7 +56,7 @@
     },
     "currency": {
       "type": "string",
-      "default": "EUR"
+      "default": "USD"
     },
     "quantity": {
       "type": "number",

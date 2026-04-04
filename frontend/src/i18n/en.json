@@ -11,5 +11,35 @@
   },
   "footer": {
     "disclaimer": "Prices are provided for informational purposes only"
+  },
+
+  "priceCheck": {
+  "manual_review": {
+    "message": "This product cannot be reliably evaluated for this objective."
+  },
+  "warnings": {
+    "unsupported_intent": "This objective is not typically associated with this type of product.",
+    "missing_thresholds": "No specific evaluation grid is defined for this objective on this product type."
+  },
+  "messages": {
+    "below_spot": {
+      "default": "The price is below the metal value, which is atypical for this type of product."
+    },
+    "within_range_low": {
+      "gold": "For a {{intent}} objective, the premium remains low for this type of gold.",
+      "silver": "For a {{intent}} objective, the price stays close to the metal value for this type of silver."
+    },
+    "within_range_high": {
+      "gold": "For a {{intent}} objective, the premium is present but consistent for this type of gold.",
+      "silver": "For a {{intent}} objective, the premium is still within a coherent range for this type of silver."
+    },
+    "borderline": {
+      "default": "The premium is starting to drift from the range typically observed for this objective."
+    },
+    "above_range": {
+      "gold": "For a {{intent}} objective, the premium exceeds what is generally observed for this type of gold.",
+      "silver": "For a {{intent}} objective, the premium exceeds what is generally sought for this type of silver."
+    }
   }
+}
 }
