@@ -1,19 +1,19 @@
 {
-  "assembly_manifest_version": "1.0.0",
+  "assembly_manifest_version": "2.0.0",
   "bundle_name": "precious-metals-mvp-catalog-pack",
   "bundle_scope": "invest_stacking_with_collection_sensitivity",
   "files": [
     {
       "name": "catalog.json",
-      "version": "1.2.0-sealed"
+      "version": "2.0.0"
     },
     {
       "name": "validation_schema.json",
-      "version": "1.3.0"
+      "version": "2.0.0"
     },
     {
       "name": "verdict_policy.json",
-      "version": "1.2.0"
+      "version": "2.0.0"
     },
     {
       "name": "preclassification_policy.json",
@@ -21,11 +21,11 @@
     },
     {
       "name": "input_contract.json",
-      "version": "1.2.0"
+      "version": "2.0.0"
     },
     {
       "name": "decision_output_schema.json",
-      "version": "1.2.0"
+      "version": "2.0.0"
     }
   ],
   "load_order": [
@@ -43,12 +43,15 @@
       "input_contract.json"
     ],
     "preclassification_policy.json": [
-      "input_contract.json",
-      "decision_output_schema.json"
+      "input_contract.json"
     ],
     "verdict_policy.json": [
       "input_contract.json",
       "decision_output_schema.json"
+    ],
+    "decision_output_schema.json": [
+      "verdict_policy.json",
+      "input_contract.json"
     ]
   }
 }
