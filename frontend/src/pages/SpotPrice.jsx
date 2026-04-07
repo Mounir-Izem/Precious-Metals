@@ -1,52 +1,29 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { convertPrice } from '../utils/spotUtils.js';
-import { getSpotData } from '../services/api.js';
 import SpotSelectors from '../components/spot/Selectors.jsx';
 import MetalCard from '../components/spot/MetalCard.jsx';
 import { useSpot } from '../context/SpotContext.jsx';
 
 const SpotPrice = () => {
-    const [data, setData] = useState(null);
+    const { spot, loading, error, language } = useSpot();
     const [currency, setCurrency] = useState('USD');
     const [unit, setUnit] = useState('oz');
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const { setFixingDate } = useSpot();
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                setError(null);
-                const spot = await getSpotData();
-                if (!spot) throw new Error('No data');
-                setData(spot);
-                setFixingDate(spot.timestamp);
-            } catch (err) {
-                console.error('Error fetching spot:', err);
-                setError(err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, []);
 
     const goldPrice = useMemo(() =>
-        data ? convertPrice(data.gold.oz_usd, unit, currency, data.rates.EUR, data.rates.GBP) : null
-    , [data, unit, currency]);
+        spot ? convertPrice(spot.gold.oz_usd, unit, currency, spot.rates.EUR, spot.rates.GBP) : null
+    , [spot, unit, currency]);
 
     const silverPrice = useMemo(() =>
-        data ? convertPrice(data.silver.oz_usd, unit, currency, data.rates.EUR, data.rates.GBP) : null
-    , [data, unit, currency]);
+        spot ? convertPrice(spot.silver.oz_usd, unit, currency, spot.rates.EUR, spot.rates.GBP) : null
+    , [spot, unit, currency]);
 
     const goldChange = useMemo(() =>
-        data ? convertPrice(data.gold.change, unit, currency, data.rates.EUR, data.rates.GBP) : null
-    , [data, unit, currency]);
+        spot ? convertPrice(spot.gold.change, unit, currency, spot.rates.EUR, spot.rates.GBP) : null
+    , [spot, unit, currency]);
 
     const silverChange = useMemo(() =>
-        data ? convertPrice(data.silver.change, unit, currency, data.rates.EUR, data.rates.GBP) : null
-    , [data, unit, currency]);
+        spot ? convertPrice(spot.silver.change, unit, currency, spot.rates.EUR, spot.rates.GBP) : null
+    , [spot, unit, currency]);
 
     const ratio = useMemo(() =>
         Number.isFinite(goldPrice) && Number.isFinite(silverPrice) && silverPrice !== 0
@@ -59,12 +36,17 @@ const SpotPrice = () => {
 
     return (
         <section className="pt-2">
+            {spot?.stale && (
+                <div className="mx-4 mb-2 px-3 py-2 bg-yellow-900/40 border border-yellow-700 rounded-xl text-yellow-400 text-xs">
+                    ⚠ Dernier spot connu — {new Date(spot.timestamp).toLocaleString(language === 'fr' ? 'fr-FR' : 'en-GB')}
+                </div>
+            )}
             <SpotSelectors currency={currency} setCurrency={setCurrency} unit={unit} setUnit={setUnit} />
             <MetalCard
                 metalName="Gold"
                 price={goldPrice}
                 change={goldChange}
-                changePct={data?.gold.change_pct}
+                changePct={spot?.gold.change_pct}
                 currency={currency}
                 unit={unit}
                 ratio={ratio}
@@ -73,7 +55,7 @@ const SpotPrice = () => {
                 metalName="Silver"
                 price={silverPrice}
                 change={silverChange}
-                changePct={data?.silver.change_pct}
+                changePct={spot?.silver.change_pct}
                 currency={currency}
                 unit={unit}
                 ratio={ratio}

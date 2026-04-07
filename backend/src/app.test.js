@@ -1,7 +1,8 @@
 import request from 'supertest';
 import app from './app.js';
-import { it, vi } from 'vitest';
+import { beforeEach, it, vi } from 'vitest';
 import { getSpot } from './services/spotService.js';
+import { resetCache } from './services/spotCacheService.js';
 
 vi.mock('./services/spotService.js', () => ({
     getSpot: vi.fn()
@@ -24,6 +25,10 @@ describe('GET /health', () => {
 });
 
 describe('GET /spot/latest', () => {
+    beforeEach(() => {
+            resetCache();
+            vi.clearAllMocks();
+        });
     it('should return 200 with normalized spot data', async () => {
         getSpot.mockResolvedValueOnce(mockSpot);
         const res = await request(app).get('/spot/latest');
