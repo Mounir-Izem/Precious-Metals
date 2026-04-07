@@ -4,9 +4,8 @@
 
 | Couche | Technologie |
 |--------|-------------|
-| Backend | Node.js + Express, CommonJS |
+| Backend | Node.js + Express, ES Modules |
 | Frontend | React + Vite, ES Modules |
-| Base de données | PostgreSQL + Prisma ORM |
 | Déploiement | Railway |
 | Style | Tailwind CSS |
 | i18n | i18next + react-i18next |
@@ -24,13 +23,11 @@
 ```
 Precious-metals/
 ├── backend/
-│   ├── src/
-│   │   ├── controllers/
-│   │   ├── services/
-│   │   ├── routes/
-│   │   ├── crons/
-│   │   └── mock/
-│   └── prisma/
+│   └── src/
+│       ├── controllers/
+│       ├── services/
+│       ├── routes/
+│       └── mock/
 └── frontend/
     └── src/
         ├── pages/
@@ -97,40 +94,6 @@ TopBar
 
 ---
 
-## Schema Prisma
-
-### SpotPrice
-```
-id, metal (gold/silver), fixing (AM/PM/NOON), oz_price_usd,
-eur_usd_rate, gbp_usd_rate, date, created_at
-@@unique([metal, fixing, date])
-```
-
-### Coin (à créer)
-```
-id, name, metal (gold/silver), weight_oz (poids fin),
-purity (ex: 0.999), category (investment/junk/semi-collection),
-country, description
-```
-
-### CommunityPrice (à créer)
-```
-id, coin_id, price_paid, currency, unit, created_at
-(anonyme — pas de user_id)
-```
-
----
-
-## Crons backend
-
-| Fixing | Heure Londres | Métal |
-|--------|--------------|-------|
-| Gold AM | 10h35 | gold |
-| Silver NOON | 12h05 | silver |
-| Gold PM | 15h05 | gold |
-
----
-
 ## Catalogue pièces MVP (~30-50 pièces)
 
 ### Or d'investissement (8 pièces)
@@ -151,8 +114,8 @@ id, coin_id, price_paid, currency, unit, created_at
 - Kangaroo 1oz argent (99.99%)
 - Libertad 1oz argent (99.9%)
 - Krugerrand 1oz argent (99.9%)
-- Panda 1oz argent chinois (31.1g avant 2016 - 30g depuis 2016) (99.9%)
-- Kookaburra 1oz argent australie (99% avant 2018 - 99.9% depuis 2018 )
+- Panda 1oz argent (avant 2016 : 31.1g / 2016+ : 30g) (99.9%)
+- Kookaburra 1oz argent (avant 2018 : 99% / 2018+ : 99.9%)
 
 ### Junk silver français (~12 pièces)
 - 50 Francs Hercule (900‰)
@@ -175,13 +138,15 @@ id, coin_id, price_paid, currency, unit, created_at
 
 ## Features — détail
 
-### ✅ Feature Spot (Phase 6 — terminée)
-- Fixings LBMA AM/PM gold + NOON silver
+### ✅ Feature Spot (terminée)
+- metals.dev real-time, format unifié `{ timestamp, stale, rates, gold, silver }`
+- Prix unique par métal + variation J/J (change/change_pct)
 - Conversion dynamique USD/EUR/GBP et oz/g/kg
-- Variation J/J + intraday AM/PM
 - Ratio gold/silver (1/X pour gold, X/1 pour silver)
 - i18n FR/EN avec drapeaux
 - Design Tailwind avec dégradés métalliques effet lingot
+- Cache mémoire backend + TTL dynamique (5min ouvert / 24h fermé) + stale fallback + single-flight ✅
+- spotCache.js frontend — localStorage fallback si backend down 🔄
 - PWA (à configurer)
 
 ### 🔄 Feature Price-Check (Phase 6 — à faire)
@@ -257,7 +222,6 @@ id, coin_id, price_paid, currency, unit, created_at
 
 ### Supertest (backend)
 - `GET /spot/latest`
-- `GET /spot/variation`
 - `GET /coins`
 - `POST /community-price`
 - Et partout où c'est nécessaire
@@ -269,33 +233,27 @@ Les tests restent dans le code — toujours. Convention : `fichier.test.js` à c
 
 ## Roadmap par phase
 
-### ✅ Phase 1-5 — Backend (terminé)
-Schema Prisma, services, routes, crons, middleware
+### ✅ Terminé
+- Migration metals.dev + suppression Prisma/LBMA
+- SpotPrice + composants, Router + Layout, SpotContext
+- CSS Tailwind, i18n FR/EN, Ratio gold/silver
+- 63 tests Vitest (15 backend + 48 frontend)
+- `feature/spot-cache` backend — cache mémoire in-memory, TTL dynamique (5min ouvert / 24h fermé), stale fallback, single-flight
 
-### ✅ Phase 6 — Frontend MVP (en cours)
-- ✅ SpotPrice + composants
-- ✅ Router + Layout
-- ✅ SpotContext
-- ✅ CSS Tailwind
-- ✅ i18n FR/EN
-- ✅ Ratio gold/silver
-- 🔄 Vitest
-- 🔄 feature/price-check
-- 🔄 feature/portfolio
-- 🔄 feature/dashboard
-- 🔄 feature/objectifs
-- 🔄 feature/export-import
-- 🔄 feature/marche-communautaire
-- 🔄 PWA (manifest + Service Worker)
+### 🔄 En cours
+- `feature/price-check-engine` — moteur métier pur
+- `feature/price-check-ui`
+- `feature/spot-realtime-live` — clé API réelle
+- `feature/portfolio` — local-first IndexedDB
+- `feature/dashboard` — calcul client
+- `feature/security-hardening`
 
-### 🔄 Phase 7 — Déploiement MVP
-- Branchement metals.dev (spot live avec cache 60s)
+### 🔄 Phase déploiement
 - Zod validation sur les réponses API
 - CORS restreint au domaine de production
 - Variables d'environnement Railway
 - Umami analytics
 - Déploiement backend Railway
-- Déploiement frontend Railway ou Vercel
 - Tests end-to-end post-déploiement
 
 ### 🔄 Phase 8 — Monétisation
@@ -313,13 +271,19 @@ Schema Prisma, services, routes, crons, middleware
 - Personnalisation visuelle des cartes portfolio
 - Gamification avancée
 
+### 🔄 Post-MVP — Résilience spot (après 3 mois d'observation)
+- Si metals.dev tombe en prod → ajouter fallback API secondaire
+- Candidats : metals-api.com ou metalpriceapi.com (option la moins chère en premier)
+- Implémentation : circuit breaker dans `metalsDevService.js` — metals.dev en premier, fallback si KO
+- Décision basée sur l'observation réelle en prod, pas sur l'hypothèse
+
 ---
 
 ## Conventions de développement
 
 - Branches : `feature/nom-feature`, `fix/nom-fix`
 - Commits : conventionnels (`feat:`, `fix:`, `refactor:`, `wip:`)
-- Backend : CommonJS
+- Backend : ES Modules
 - Frontend : ES Modules
 - JavaScript jusqu'à Phase 9, puis TypeScript
 - Pas de décision sans validation explicite

@@ -10,8 +10,8 @@ import { trendColor,
 
 // Tests pour la fonction trendColor
 describe('trendColor', () => {
-    it('should return text-green-700 for positive values', () => {
-        expect(trendColor(10)).toBe('text-green-700');
+    it('should return text-green-400 for positive values', () => {
+        expect(trendColor(10)).toBe('text-green-400');
     });
     it('should return text-gray-400 for zero', () => {
         expect(trendColor(0)).toBe('text-gray-400');

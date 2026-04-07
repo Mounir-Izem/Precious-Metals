@@ -1,129 +1,63 @@
-import { trendColor, absFmt, fmt, sign, currencySymbol, convertPrice } from '../utils/spotUtils.js';
-import { useState, useEffect, useMemo } from 'react';
-import { getSpotData, getSpotVariation } from '../services/api.js';
-import SpotSelectors from '../components/spot/Selectors.jsx'
-import MetalCard from '../components/spot/MetalCard.jsx'
-import { useSpot } from '../context/SpotContext.jsx'
+import { useState, useMemo } from 'react';
+import { convertPrice } from '../utils/spotUtils.js';
+import SpotSelectors from '../components/spot/Selectors.jsx';
+import MetalCard from '../components/spot/MetalCard.jsx';
+import { useSpot } from '../context/SpotContext.jsx';
 
 const SpotPrice = () => {
-
-    // Declaration des states
-    const [displayData, setDisplayData] = useState([]);
-    const [displayVar, setDisplayVar] = useState({});
+    const { spot, loading, error, language } = useSpot();
     const [currency, setCurrency] = useState('USD');
     const [unit, setUnit] = useState('oz');
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
-    // Appel api coté front
-    useEffect(() => {
-        const fetchAllData = async () => {
-            try {
-                setLoading(true);
-                setError(null);
+    const goldPrice = useMemo(() =>
+        spot ? convertPrice(spot.gold.oz_usd, unit, currency, spot.rates.EUR, spot.rates.GBP) : null
+    , [spot, unit, currency]);
 
-                const [data, dataVar] = await Promise.all([
-                    getSpotData(),
-                    getSpotVariation()
-                ]);
+    const silverPrice = useMemo(() =>
+        spot ? convertPrice(spot.silver.oz_usd, unit, currency, spot.rates.EUR, spot.rates.GBP) : null
+    , [spot, unit, currency]);
 
-                if (!data || !dataVar) throw new Error("Invalid data");
+    const goldChange = useMemo(() =>
+        spot ? convertPrice(spot.gold.change, unit, currency, spot.rates.EUR, spot.rates.GBP) : null
+    , [spot, unit, currency]);
 
-                setDisplayData(data);
-                setDisplayVar(dataVar);
+    const silverChange = useMemo(() =>
+        spot ? convertPrice(spot.silver.change, unit, currency, spot.rates.EUR, spot.rates.GBP) : null
+    , [spot, unit, currency]);
 
-            } catch (error) {
-                console.error('error fetching data:', error);
-                setError(error);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const ratio = useMemo(() =>
+        Number.isFinite(goldPrice) && Number.isFinite(silverPrice) && silverPrice !== 0
+            ? (goldPrice / silverPrice).toFixed(2)
+            : null
+    , [goldPrice, silverPrice]);
 
-        fetchAllData();
-    }, []);
-
-    // Utilisation de useMemo pour sécurisé le re-render
-    const spotData = useMemo(() => {
-        const goldFixingAm = displayData.find(n => n.metal === 'gold' && n.fixing === 'AM');
-        const goldFixingPm = displayData.find(n => n.metal === 'gold' && n.fixing === 'PM');
-        const silverFixing = displayData.find(n => n.metal === 'silver' && n.fixing === 'NOON');
-        const goldAmUsd = parseFloat(goldFixingAm?.oz_price_usd);
-        const goldPmUsd = parseFloat(goldFixingPm?.oz_price_usd);
-        const goldIntradayValue = Number.isFinite(goldAmUsd) && Number.isFinite(goldPmUsd)
-            ? goldPmUsd - goldAmUsd : null;
-        const goldIntradayPercent = Number.isFinite(goldAmUsd) && Number.isFinite(goldPmUsd) && goldAmUsd !== 0
-            ? (goldPmUsd - goldAmUsd) / goldAmUsd * 100 : null;
-        const goldVarPercent = parseFloat(displayVar.gold?.variationPercent);
-        const silverVarPercent = parseFloat(displayVar.silver?.variationPercent);
-
-        return {
-            goldFixingAm, goldFixingPm, silverFixing,
-            goldAmUsd, goldPmUsd,
-            goldIntradayValue, goldIntradayPercent,
-            goldVarPercent, silverVarPercent
-        };
-    }, [displayData, displayVar]);
-
-    const convertedPrices = useMemo(() => {
-        const { goldFixingAm, goldFixingPm, silverFixing, goldIntradayValue } = spotData;
-
-        const goldAmPrice = convertPrice(goldFixingAm?.oz_price_usd, unit, currency, goldFixingAm?.eur_usd_rate, goldFixingAm?.gbp_usd_rate);
-        const goldPmPrice = convertPrice(goldFixingPm?.oz_price_usd, unit, currency, goldFixingPm?.eur_usd_rate, goldFixingPm?.gbp_usd_rate);
-        const silverPrice = convertPrice(silverFixing?.oz_price_usd, unit, currency, silverFixing?.eur_usd_rate, silverFixing?.gbp_usd_rate);
-        const goldVarValue = convertPrice(displayVar.gold?.variationValue, unit, currency, goldFixingPm?.eur_usd_rate, goldFixingPm?.gbp_usd_rate);
-        const goldIntradayConverted = convertPrice(goldIntradayValue, unit, currency, goldFixingPm?.eur_usd_rate, goldFixingPm?.gbp_usd_rate);
-        const silverVarValue = convertPrice(displayVar.silver?.variationValue, unit, currency, silverFixing?.eur_usd_rate, silverFixing?.gbp_usd_rate);
-        const ratio = Number.isFinite(goldPmPrice) && Number.isFinite(silverPrice) && silverPrice !== 0
-            ? (goldPmPrice / silverPrice).toFixed(2)
-            : null;
-
-        return { goldAmPrice, goldPmPrice, silverPrice, goldVarValue, goldIntradayConverted, silverVarValue, ratio };
-    }, [displayData, displayVar, currency, unit, spotData]);
-
-    // Consomation de la date du dernier fixing
-    const { setFixingDate } = useSpot();
-
-    useEffect(() => {
-        if (spotData.goldFixingAm?.date) {
-            setFixingDate(spotData.goldFixingAm.date);
-        }
-    }, [spotData]);
-
-    // Affichage du loading et error
     if (loading) return <main><h1>Loading ...</h1></main>;
     if (error) return <main><h1>Error loading market data.</h1></main>;
 
-    // Declaration des variables de protection re-render
-    const { goldIntradayPercent, goldVarPercent, silverVarPercent } = spotData;
-    const { goldAmPrice, goldPmPrice, silverPrice, goldVarValue, goldIntradayConverted, silverVarValue, ratio } = convertedPrices;
-
-
-
     return (
         <section className="pt-2">
+            {spot?.stale && (
+                <div className="mx-4 mb-2 px-3 py-2 bg-yellow-900/40 border border-yellow-700 rounded-xl text-yellow-400 text-xs">
+                    ⚠ Dernier spot connu — {new Date(spot.timestamp).toLocaleString(language === 'fr' ? 'fr-FR' : 'en-GB')}
+                </div>
+            )}
             <SpotSelectors currency={currency} setCurrency={setCurrency} unit={unit} setUnit={setUnit} />
             <MetalCard
-                metalName={'Gold'}
-                varValue={goldVarValue}
-                varPercent={goldVarPercent}
-                unit={unit}
+                metalName="Gold"
+                price={goldPrice}
+                change={goldChange}
+                changePct={spot?.gold.change_pct}
                 currency={currency}
-                amPrice={goldAmPrice}
-                pmPrice={goldPmPrice}
-                intradayConverted={goldIntradayConverted}
-                intradayPercent={goldIntradayPercent}
-                hasPm={true}
+                unit={unit}
                 ratio={ratio}
             />
             <MetalCard
-                metalName={'Silver'}
+                metalName="Silver"
+                price={silverPrice}
+                change={silverChange}
+                changePct={spot?.silver.change_pct}
                 currency={currency}
                 unit={unit}
-                varValue={silverVarValue}
-                varPercent={silverVarPercent}
-                amPrice={silverPrice}
-                hasPm={false}
                 ratio={ratio}
             />
         </section>

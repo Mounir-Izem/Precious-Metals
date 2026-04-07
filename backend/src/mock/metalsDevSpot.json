@@ -1,0 +1,24 @@
+{
+  "metals": {
+    "gold": 3120.50,
+    "silver": 34.20
+  },
+  "currencies": {
+    "EUR": 1.0895,
+    "GBP": 1.2696
+  },
+  "change": {
+    "gold": -15.75,
+    "silver": -0.45
+  },
+  "change_percentage": {
+    "gold": -0.51,
+    "silver": -1.33
+  },
+  "timestamps": {
+    "metal": 1743775200,
+    "currency": 1743775200
+  },
+  "status": "success",
+  "unit": "toz"
+}

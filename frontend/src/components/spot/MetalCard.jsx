@@ -1,13 +1,8 @@
 import { trendColor, absFmt, fmt, sign, currencySymbol } from '../../utils/spotUtils.js';
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next';
 
-const MetalCard = ({ metalName, varValue, varPercent, amPrice, pmPrice,
-    intradayConverted, intradayPercent, currency, unit, hasPm, ratio }) => {
-    
-    // Gestion de la traduction des langues
+const MetalCard = ({ metalName, price, change, changePct, currency, unit, ratio }) => {
     const { t } = useTranslation();
-
-    // Pattern pour les styles css
 
     const styleGold = {
         className: "rounded-2xl p-4 mx-4 my-2 shadow-lg text-white",
@@ -19,6 +14,7 @@ const MetalCard = ({ metalName, varValue, varPercent, amPrice, pmPrice,
         labelColor: 'text-white',
         subLabelColor: 'text-white/70'
     };
+
     const styleSilver = {
         className: "rounded-2xl p-4 mx-4 my-2 shadow-lg text-gray-800",
         style: {
@@ -28,7 +24,9 @@ const MetalCard = ({ metalName, varValue, varPercent, amPrice, pmPrice,
         labelColor: 'text-gray-800',
         subLabelColor: 'text-gray-500'
     };
+
     const cardStyle = metalName === 'Gold' ? styleGold : styleSilver;
+    const isGold = metalName === 'Gold';
 
     return (
         <article className={cardStyle.className} style={cardStyle.style}>
@@ -36,54 +34,28 @@ const MetalCard = ({ metalName, varValue, varPercent, amPrice, pmPrice,
                 <h3 className='text-4xl italic uppercase'>{t(`metals.${metalName.toLowerCase()}`)}</h3>
                 <div className="text-right">
                     <h3 className={`text-xs uppercase font-bold ${cardStyle.labelColor}`}>{t('metalCard.variation')}</h3>
-                    <p className={`${trendColor(varValue)} font-bold text-sm bg-black/20 rounded-full px-2 py-0.5`}>
-                        {sign(varValue)}{absFmt(varValue)}{currencySymbol[currency]} ✺ {sign(varPercent)}{absFmt(varPercent)}%
+                    <p className={`${trendColor(change)} font-bold text-sm bg-black/20 rounded-full px-2 py-0.5`}>
+                        {sign(change)}{absFmt(change)}{currencySymbol[currency]} ✺ {sign(changePct)}{absFmt(changePct)}%
                     </p>
                 </div>
             </div>
-            <div className="flex gap-4 mt-3">
-                <div className="flex-1">
-                    <h3 className={`text-xs uppercase font-bold ${cardStyle.labelColor}`}>{t('metalCard.amFixing')}</h3>
-                    <p className="text-2xl font-bold">{fmt(amPrice)}</p>
-                    <span className={`text-xs ${cardStyle.subLabelColor}`}>{currencySymbol[currency]} / {unit}</span>
-                </div>
-                {hasPm && (
-                    <div className="flex-1">
-                        <p className={`text-xs uppercase font-bold ${cardStyle.labelColor}`}>{t('metalCard.pmFixing')}</p>
-                        <p className="text-2xl font-bold">{fmt(pmPrice)}</p>
-                        <span className={`text-xs ${cardStyle.subLabelColor}`}>{currencySymbol[currency]} / {unit}</span>
-                    </div>
-                )}
-                {!hasPm && (
-                    <div className="flex-1">
-                        <h3 className={`text-xs uppercase font-bold ${cardStyle.labelColor}`}>Ratio Oz</h3>
-                        <p className="text-2xl">
-                            <span className="font-black">{ratio}</span> / 1
-                        </p>
-                    </div>
-                )}
+            <div className="mt-3">
+                <p className="text-3xl font-bold">{fmt(price)}</p>
+                <span className={`text-xs ${cardStyle.subLabelColor}`}>{currencySymbol[currency]} / {unit}</span>
             </div>
-            <div className="flex justify-between items-center mt-3">
-                {hasPm && (
-                    <div>
-                        <h3 className={`text-xs uppercase font-bold ${cardStyle.labelColor}`}>Ratio Oz</h3>
-                        <p>
-                            <span className="font-black">1 /</span> {ratio}
-                        </p>
-                    </div>
-                )}
-                {hasPm && (
-                    <div className="text-right">
-                        <h3 className={`text-xs uppercase font-bold ${cardStyle.labelColor}`}>{t('metalCard.intraday')}</h3>
-                        <p className={`${trendColor(intradayConverted)} font-bold text-sm bg-black/20 rounded-full px-2 py-0.5`}>
-                            {sign(intradayConverted)}{absFmt(intradayConverted)}{currencySymbol[currency]}
-                            ✺ {sign(intradayPercent)}{absFmt(intradayPercent)}%
-                        </p>
-                    </div>
-                )}
+            <div className="mt-3 flex justify-end">
+                <div className="text-right">
+                    <h3 className={`text-xs uppercase font-bold ${cardStyle.labelColor}`}>Ratio Oz</h3>
+                    <p className="font-bold">
+                        {isGold
+                            ? <><span className="font-black">1</span> / {ratio}</>
+                            : <><span className="font-black">{ratio}</span> / 1</>
+                        }
+                    </p>
+                </div>
             </div>
         </article>
-    )
-}
+    );
+};
 
 export default MetalCard;

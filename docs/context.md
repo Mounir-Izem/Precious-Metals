@@ -38,9 +38,8 @@ Tu es le co-développeur senior et conseiller produit du projet **Precious Metal
 
 | Couche | Technologie |
 |--------|-------------|
-| Backend | Node.js + Express, CommonJS |
+| Backend | Node.js + Express, ES Modules |
 | Frontend | React + Vite, ES Modules |
-| Base de données | PostgreSQL + Prisma ORM |
 | Déploiement | Railway |
 | Style | Tailwind CSS |
 | i18n | i18next + react-i18next |
@@ -115,107 +114,53 @@ TopBar
 ```
 backend/src/
 ├── controllers/
-│   └── spotController.js ✅
+│   ├── spotController.js ✅
+│   └── healthController.js ✅
 ├── services/
-│   ├── spotService.js ✅
-│   └── lbmaService.js ✅
+│   ├── metalsDevService.js ✅    ← fetch mock ou API réelle (USE_MOCK_SPOT)
+│   ├── spotService.js ✅         ← normalise vers format produit
+│   ├── marketWindow.js ✅        ← isMarketOpen() + getSpotTtlMs() (TTL 5min/24h)
+│   └── spotCacheService.js ✅    ← cache in-memory, single-flight, stale fallback
 ├── routes/
 │   ├── spot.js ✅
 │   └── health.js ✅
-├── crons/
-│   └── spotCron.js ✅
 ├── mock/
-│   └── spotPrice.json ✅
-├── db.js ✅
+│   └── metalsDevSpot.json ✅     ← format metals.dev simulé
 └── index.js ✅
 ```
 
 ### Endpoints existants
-- `GET /spot/latest` — fixings du jour
-- `GET /spot/variation` — variation J/J gold PM + silver NOON
+- `GET /spot/latest` — `{ timestamp, stale, rates, gold: { oz_usd, g_fine_usd, change, change_pct }, silver: { ... } }`
+- `GET /health`
 
 ### Endpoints à créer
 - `GET /coins` — catalogue pièces
 - `POST /community-price` — soumission prix anonyme
 - `GET /community-price/:coinId` — prix observés pour une pièce
 
-### Crons
-| Fixing | Heure Londres | Métal |
-|--------|--------------|-------|
-| Gold AM | 10h35 | gold |
-| Silver NOON | 12h05 | silver |
-| Gold PM | 15h05 | gold |
-
----
-
-## Schema Prisma actuel
-
-```prisma
-enum Fixing { AM PM NOON }
-enum Metal { gold silver }
-
-model SpotPrice {
-  id           Int      @id @default(autoincrement())
-  metal        Metal
-  fixing       Fixing
-  oz_price_usd Decimal
-  eur_usd_rate Decimal
-  gbp_usd_rate Decimal
-  date         DateTime
-  created_at   DateTime @default(now())
-  @@unique([metal, fixing, date])
-}
-```
-
-### À créer
-```prisma
-model Coin {
-  id          Int     @id @default(autoincrement())
-  name        String
-  metal       Metal
-  weight_oz   Decimal  // poids fin en troy ounce
-  purity      Decimal  // ex: 0.999
-  category    String   // investment / junk / semi-collection
-  country     String
-  description String?
-}
-
-model CommunityPrice {
-  id         Int      @id @default(autoincrement())
-  coin_id    Int
-  price_paid Decimal
-  currency   String
-  unit       String
-  created_at DateTime @default(now())
-  // Anonyme — pas de user_id
-}
-```
-
 ---
 
 ## Features — état
 
 ### ✅ Terminées
-- SpotPrice avec fixings LBMA AM/PM/NOON
+- Migration metals.dev — spot temps réel, format unifié, mock-first
+- Suppression Prisma, node-cron, LBMA, crons
+- SpotPrice page — prix unique par métal + variation J/J
 - Conversion dynamique USD/EUR/GBP + oz/g/kg
-- Variation J/J + intraday AM/PM gold
 - Ratio gold/silver (1/X gold, X/1 silver)
-- i18n FR/EN avec drapeaux SVG
-- CSS Tailwind — dégradés métalliques effet lingot
-- Router + Layout + SpotContext
-- BottomNav avec NavLink actif/inactif
+- i18n FR/EN avec drapeaux SVG + `priceCheck.intents.*`
+- CSS Tailwind — dégradés métalliques
+- Router + Layout + SpotContext + BottomNav + TopBar
+- 63 tests Vitest (15 backend + 48 frontend)
 
-### 🔄 En cours — Phase 6
-Branche actuelle : `feature/tests`
-
-Ordre des prochaines branches :
-1. `feature/tests` — Vitest sur spotUtils.js + Supertest backend
-2. `feature/price-check` — catalogue + calculateurs + marché communautaire
-3. `feature/portfolio` — localStorage chiffré + 10 pièces
-4. `feature/dashboard` — métriques basiques
-5. `feature/objectifs` — 1 objectif gratuit
-6. `feature/export-import` — AES-256 + transfert
-7. `feature/pwa` — manifest + Service Worker
+### 🔄 Prochaines branches
+1. `feature/spot-cache` ✅ terminée
+2. `feature/price-check-engine` — moteur métier pur, sans UI 🔄
+3. `feature/price-check-ui` — connexion moteur → UI
+4. `feature/spot-realtime-live` — USE_MOCK_SPOT=false, clé API réelle
+5. `feature/portfolio` — local-first IndexedDB, sans compte, sans backend
+6. `feature/dashboard` — calcul client uniquement
+7. `feature/security-hardening`
 
 ### 🔄 Phase 7 — Déploiement
 - Branchement metals.dev avec cache 60s
@@ -331,7 +276,7 @@ Prime moyenne par métal séparément — les primes or (~2-5%) et argent (~20-3
 | Philharmoniker 1oz | 99.99% | 1.0000 |
 | Souverain | 91.67% | 0.2354 |
 
-### Argent d'investissement (8 pièces)
+### Argent d'investissement
 | Pièce | Pureté | Poids fin oz |
 |-------|--------|-------------|
 | Maple Leaf 1oz | 99.99% | 1.0000 |
@@ -339,11 +284,12 @@ Prime moyenne par métal séparément — les primes or (~2-5%) et argent (~20-3
 | Philharmoniker 1oz | 99.9% | 1.0000 |
 | Britannia 1oz | 99.9% | 1.0000 |
 | Kangaroo 1oz | 99.99% | 1.0000 |
-| Hercule 50F | 90% | 0.7234 |
 | Libertad 1oz | 99.9% | 1.0000 |
 | Krugerrand 1oz | 99.9% | 1.0000 |
-| Panda 1oz argent chinois (31.1g avant 2016 - 30g depuis 2016) (99.9%)
-| Kookaburra 1oz argent australie (99% avant 2018 - 99.9% depuis 2018 )
+| Panda 1oz (avant 2016) | 99.9% | 0.9990 |
+| Panda 1oz (2016+) | 99.9% | 0.9646 |
+| Kookaburra 1oz (avant 2018) | 99% | 0.9893 |
+| Kookaburra 1oz (2018+) | 99.9% | 0.9990 |
 
 ### Junk silver français (~12 pièces)
 | Pièce | Pureté | Poids total g | Poids fin oz |

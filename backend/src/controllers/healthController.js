@@ -1,4 +1,4 @@
-import prisma from '../db.js';
+
 
 const getHealth = (_req, res) => {
     res.status(200).json({'status': 'succes'})

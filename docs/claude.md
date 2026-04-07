@@ -1,10 +1,21 @@
 # CLAUDE.md — Precious Metals
 
+## ⚠️ PROTOCOLE DE DÉMARRAGE — OBLIGATOIRE
+
+**À chaque nouvelle session ou reprise après compaction :**
+
+1. Lire **tous** les fichiers dans `docs/` (`current_phase.md`, `roadmap.md`, `architecture.md`, `context.md`, `rules.md`)
+2. Synthétiser ce qui a été compris : phase en cours, décisions fermes, état des features
+3. Présenter cette synthèse à Mounir et **attendre sa validation explicite** avant toute action
+
+`current_phase.md` peut contenir des oublis ou des informations obsolètes — ne jamais supposer qu'il est parfaitement à jour.
+
+---
+
 ## ⚠️ RÈGLES ABSOLUES — LIS CECI EN PREMIER
 
 ### Fichiers interdits — NE JAMAIS LIRE, MODIFIER OU SUGGÉRER
 - `.env` et tout fichier `.env.*`
-- `prisma/migrations/`
 - Tout fichier contenant des credentials, clés API, secrets
 
 Ces fichiers ne t'appartiennent pas. Tu n'as aucune raison de les consulter.
@@ -32,9 +43,8 @@ Valeur principale : calculateur de prime au moment d'acheter une pièce sur le m
 
 | Couche | Technologie |
 |--------|-------------|
-| Backend | Node.js + Express, **CommonJS** |
+| Backend | Node.js + Express, **ES Modules** |
 | Frontend | React + Vite, **ES Modules** |
-| Base de données | PostgreSQL + Prisma ORM |
 | Déploiement | Railway (monorepo npm workspaces) |
 | Style | Tailwind CSS |
 | i18n | i18next + react-i18next (FR/EN) ✅ |
@@ -51,15 +61,19 @@ Valeur principale : calculateur de prime au moment d'acheter une pièce sur le m
 
 ```
 Precious-metals/
-├── CLAUDE.md
+├── docs/
+│   └── CLAUDE.md
 ├── backend/
-│   ├── src/
-│   │   ├── controllers/
-│   │   ├── services/
-│   │   ├── routes/
-│   │   ├── crons/
-│   │   └── mock/
-│   └── prisma/
+│   └── src/
+│       ├── controllers/
+│       ├── services/
+│       │   ├── metalsDevService.js
+│       │   ├── spotService.js
+│       │   ├── marketWindow.js
+│       │   └── spotCacheService.js
+│       ├── routes/
+│       └── mock/
+│           └── metalsDevSpot.json
 └── frontend/
     └── src/
         ├── pages/
@@ -81,7 +95,7 @@ Precious-metals/
 
 - Branches : `feature/nom`, `fix/nom`
 - Commits : conventionnels (`feat:`, `fix:`, `refactor:`, `wip:`)
-- Backend : CommonJS (`require`/`module.exports`)
+- Backend : ES Modules (`import`/`export`)
 - Frontend : ES Modules (`import`/`export`)
 - JavaScript jusqu'à Phase 9, puis migration TypeScript fichier par fichier
 - Tests : `fichier.test.js` à côté de `fichier.js`, jamais supprimés
@@ -92,23 +106,27 @@ Precious-metals/
 ## État des features
 
 ### ✅ Terminées
-- SpotPrice (fixings LBMA AM/PM/NOON)
+- Migration metals.dev (spot real-time, format unifié, mock-first)
+- Suppression Prisma, node-cron, LBMA stack
+- `/spot/latest` endpoint : `{ timestamp, stale, rates, gold, silver }` avec change/change_pct
+- SpotPrice page — prix unique par métal + variation J/J
 - Conversion dynamique USD/EUR/GBP + oz/g/kg
-- Variation J/J + intraday AM/PM gold
 - Ratio gold/silver
-- i18n FR/EN avec drapeaux SVG
+- i18n FR/EN avec drapeaux SVG + clés `priceCheck.intents.*`
 - CSS Tailwind — dégradés métalliques
 - Router + Layout + SpotContext
-- BottomNav avec NavLink actif/inactif
-- TopBar avec date fixing LBMA
+- BottomNav + TopBar
+- 63 tests Vitest (15 backend + 48 frontend)
+- `feature/spot-cache` ✅ — cache in-memory TTL 5min/24h, stale fallback, single-flight, localStorage frontend
 
-### 🔄 En cours — branche active : `feature/tests`
-1. `feature/tests` — Vitest sur `spotUtils.js` + Supertest backend
-2. `feature/price-check` — catalogue + calculateurs + marché communautaire
-3. `feature/portfolio` — vault chiffré + 10 pièces
-4. `feature/dashboard` — métriques basiques
-5. `feature/objectifs` — 1 objectif gratuit
-6. `feature/pwa` — manifest + Service Worker
+### 🔄 Prochaines branches
+1. `feature/price-check-engine` — moteur métier pur, sans UI 🔄
+2. `feature/price-check-ui` — composants + page + route /price-check
+3. `feature/price-check-ui` — connexion moteur → UI
+4. `feature/spot-realtime-live` — `USE_MOCK_SPOT=false`, clé API réelle
+5. `feature/portfolio` — local-first IndexedDB, sans compte, sans backend
+6. `feature/dashboard` — calcul client, combine portfolio + spot
+7. `feature/security-hardening` — Helmet CSP, audit inputs, hygiène deps
 
 ### 🔄 Phase 7 — Déploiement
 - metals.dev live avec cache 60s
@@ -124,15 +142,12 @@ Precious-metals/
 
 ## Décisions techniques validées
 
-### Chiffrement et sync (vault)
-- **AES-256-GCM** + **PBKDF2** (100 000 itérations, sel aléatoire stocké en clair)
-- Sync serveur : blob chiffré opaque lié à un UUID v4 anonyme (`crypto.randomUUID()`)
-- Le serveur ne voit jamais les données en clair — jamais
-- Endpoints à créer : `PUT /vault/:uuid`, `GET /vault/:uuid`, `GET /vault/:uuid/status`
-- Modèle Prisma : `Vault { uuid, encrypted_blob, updated_at, premium, expires_at }`
-- Conflit de sync : refuser PUT si `updated_at` envoyé < `updated_at` en base
-- Récupération UUID : email transactionnel via Brevo (email non persisté en base)
-- localStorage : UUID + préférences UI + cache statut premium uniquement
+### Architecture MVP — décisions fermes
+- Portfolio = local-first (IndexedDB), sans backend, sans compte, sans chiffrement pour le MVP
+- Backend = spot uniquement — cache mémoire, pas de DB, pas de Redis pour le MVP
+- Pas d'auth dans le MVP
+- Dashboard = calcul côté client uniquement (portfolio local + spot courant)
+- `USE_MOCK_SPOT=true` en dev, `false` uniquement en `feature/spot-realtime-live`
 
 ### Sécurité générale
 - Zod validation sur **toutes** les entrées API et sur les réponses metals.dev
@@ -144,14 +159,6 @@ Precious-metals/
 - Variables d'environnement Railway, jamais dans le code
 - HTTPS uniquement
 
-### Crons — fiabilité
-- Vérification jour ouvré LBMA avant exécution
-- Retry backoff exponentiel : échec → 5min → échec → 10min → échec → abandon + alerte
-- Alerte email Brevo au développeur si 3 échecs consécutifs
-- Validation Zod sur la réponse metals.dev avant tout INSERT
-- Vérification au démarrage backend : fixing du jour manquant → récupération automatique
-- Frontend : badge "Données retardées" si fixing > 2h
-
 ### Stripe (Phase 8)
 - Checkout Session avec UUID + email en metadata
 - Webhook idempotent + vérification signature obligatoire + rejet si > 5 minutes
@@ -161,62 +168,9 @@ Precious-metals/
 
 ---
 
-## Schema Prisma actuel
-
-```prisma
-enum Fixing { AM PM NOON }
-enum Metal { gold silver }
-
-model SpotPrice {
-  id           Int      @id @default(autoincrement())
-  metal        Metal
-  fixing       Fixing
-  oz_price_usd Decimal
-  eur_usd_rate Decimal
-  gbp_usd_rate Decimal
-  date         DateTime
-  created_at   DateTime @default(now())
-  @@unique([metal, fixing, date])
-}
-```
-
-### À créer
-```prisma
-model Vault {
-  uuid           String   @id
-  encrypted_blob String
-  updated_at     DateTime
-  premium        Boolean  @default(false)
-  expires_at     DateTime?
-}
-
-model Coin {
-  id          Int     @id @default(autoincrement())
-  name        String
-  metal       Metal
-  weight_oz   Decimal
-  purity      Decimal
-  category    String
-  country     String
-  description String?
-}
-
-model CommunityPrice {
-  id         Int      @id @default(autoincrement())
-  coin_id    Int
-  price_paid Decimal
-  currency   String
-  unit       String
-  created_at DateTime @default(now())
-}
-```
-
----
-
 ## Endpoints existants
 
-- `GET /spot/latest` — fixings du jour
-- `GET /spot/variation` — variation J/J gold PM + silver NOON
+- `GET /spot/latest` — `{ timestamp, stale, rates, gold: { oz_usd, g_fine_usd, change, change_pct }, silver: { ... } }`
 - `GET /health`
 
 ## Endpoints à créer
@@ -224,9 +178,6 @@ model CommunityPrice {
 - `GET /coins`
 - `POST /community-price`
 - `GET /community-price/:coinId`
-- `PUT /vault/:uuid`
-- `GET /vault/:uuid`
-- `GET /vault/:uuid/status`
 - `POST /webhook/stripe` (Phase 8)
 
 ---
