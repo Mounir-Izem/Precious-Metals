@@ -104,7 +104,22 @@
             "historical_bullion",
             "semi",
             "junk",
-            "manual_review"
+            "manual_review",
+            "unknown"
+          ]
+        },
+        "series_role": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "allowed_values": [
+            "bullion",
+            "historical_bullion",
+            "semi_bullion",
+            "semi_bullion_high_sensitivity",
+            "junk_investment"
           ]
         }
       }
@@ -120,6 +135,10 @@
           "required": true
         },
         "premium_pct": {
+          "type": "number",
+          "required": true
+        },
+        "asking_price": {
           "type": "number",
           "required": true
         }
@@ -148,8 +167,21 @@
           ]
         },
         "message": {
-          "type": "string",
-          "required": true
+          "type": "object",
+          "required": true,
+          "fields": {
+            "key": { "type": "string", "required": true },
+            "vars": { "type": "object", "required": true }
+          }
+        },
+        "thresholds": {
+          "type": "object",
+          "required": true,
+          "fields": {
+            "low_max": { "type": "number", "required": true },
+            "high_max": { "type": "number", "required": true },
+            "limit_max": { "type": "number", "required": false }
+          }
         }
       }
     },
@@ -165,8 +197,12 @@
           ]
         },
         "message": {
-          "type": "string",
-          "required": true
+          "type": "object",
+          "required": true,
+          "fields": {
+            "key": { "type": "string", "required": true },
+            "vars": { "type": "object", "required": true }
+          }
         }
       }
     },
@@ -222,7 +258,7 @@
     },
     "error": {
       "product": "object_or_null",
-      "pricing": null,
+      "pricing": "object_or_null",
       "analysis": null,
       "manual_review": null,
       "warnings": [],
@@ -231,7 +267,7 @@
     },
     "manual_review": {
       "product": "required_object",
-      "pricing": "required_object",
+      "pricing": "object_or_null",
       "analysis": "required_object_matching_analysis_manual_review",
       "manual_review": "required_object",
       "warnings": "array",
@@ -252,7 +288,6 @@
     "manual_review is a runtime status, not a verdict.",
     "No short verdict labels are exposed to the user in this schema.",
     "User-facing interpretation is carried by analysis.position + analysis.message.",
-    "Pricing remains visible in manual_review.",
-    "Warnings are non-blocking and may coexist with evaluated or manual_review."
+    "Pricing remains visible in manual_review when spot is provided, null otherwise."
   ]
 }

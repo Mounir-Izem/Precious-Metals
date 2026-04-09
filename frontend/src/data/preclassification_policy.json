@@ -1,5 +1,6 @@
 {
   "preclassification_policy_version": "1.0.0",
+  "mvp_status": "disabled — future capability, not used in current engine flow",
   "scope": "input_guard_before_catalog_resolution",
   "purpose": "Reject or flag obvious non-precious or out-of-scope coins before verdict computation.",
   "supported_outputs": [

@@ -15,13 +15,16 @@
       "semi_stack": "semi-stack",
       "liquidity": "liquidité"
     },
+    "errors": {
+      "unknown_family": "Aucun produit correspondant n'a été trouvé dans le catalogue.",
+      "unknown_variant": "Le format ou le grammage spécifié n'existe pas pour ce produit.",
+      "policy_resolution_failed": "Le type de produit n'est pas pris en charge par le moteur d'évaluation.",
+      "missing_thresholds": "Aucune grille de lecture spécifique n'est définie pour cet objectif sur ce type de produit."
+    },
     "manual_review": {
       "message": "Ce produit ne peut pas être évalué de manière fiable pour cet objectif."
     },
-    "warnings": {
-      "unsupported_intent": "Cet objectif n'est pas typiquement associé à ce type de produit.",
-      "missing_thresholds": "Aucune grille de lecture spécifique n'est définie pour cet objectif sur ce type de produit."
-    },
+
     "messages": {
       "below_spot": {
         "default": "Le prix est inférieur à la valeur métal, ce qui est atypique pour ce type de produit."

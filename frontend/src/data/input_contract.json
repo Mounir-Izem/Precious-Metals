@@ -31,6 +31,7 @@
     },
     "ask_price": {
       "type": "number",
+      "description": "Total price of the lot. Not the unit price.",
       "constraints": [
         "must_be_positive",
         "must_be_finite"
@@ -51,7 +52,7 @@
         "must_be_finite"
       ],
       "required_if": [
-        "pricing_engine != manual_only"
+        "shouldManualReview() == false"
       ]
     },
     "currency": {
@@ -60,6 +61,7 @@
     },
     "quantity": {
       "type": "number",
+      "description": "Number of units in the lot.",
       "default": 1,
       "constraints": [
         "must_be_integer",
@@ -72,15 +74,18 @@
     },
     "raw_title": {
       "type": "string",
-      "optional": true
+      "optional": true,
+      "note": "raw_title and ocr_text are not used in the MVP engine flow"
     },
     "ocr_text": {
       "type": "string",
-      "optional": true
+      "optional": true,
+      "note": "raw_title and ocr_text are not used in the MVP engine flow"
     }
   },
   "preclassification_flow": {
-    "enabled": true,
+    "enabled": false,
+    "mvp_status": "disabled — future capability, not used in current engine flow",
     "policy_ref": "preclassification_policy.json",
     "steps": [
       "inspect raw_title and/or ocr_text if present",
@@ -99,43 +104,30 @@
     ]
   },
   "resolution_outputs": [
-    "family_name",
-    "variant_label",
+    "family_id",
+    "variant_code",
     "metal",
-    "issuer_country",
     "series_role",
-    "pricing_engine",
-    "fine_weight_g",
-    "purity",
-    "gross_weight_g",
-    "diameter_mm",
-    "scan_capability",
-    "media_profile"
+    "archetype"
   ],
   "derived_fields": {
-    "unit_price": {
-      "description": "Derived from ask_price and quantity in engine code."
-    },
     "fine_weight_total_g": {
       "description": "Derived from variant.fine_weight_g and quantity in engine code."
     }
   },
   "blocking_error_codes": [
+    "invalid_input",
+    "missing_required_field",
+    "invalid_ask_price",
+    "invalid_user_intent",
+    "invalid_spot_price",
+    "invalid_quantity",
     "unknown_family",
     "unknown_variant",
-    "missing_spot_price",
-    "invalid_quantity",
-    "invalid_ask_price",
-    "invalid_spot_price",
-    "catalog_resolution_failed",
     "policy_resolution_failed",
-    "non_precious_metal_detected",
-    "unsupported_non_precious_coin"
-  ],
-  "warning_codes": [
-    "unsupported_intent",
     "missing_thresholds_for_archetype"
   ],
+  "warning_codes": [],
   "validation_rules": [
     {
       "rule": "family must exist",
@@ -146,7 +138,7 @@
       "error_code": "unknown_variant"
     },
     {
-      "rule": "spot_price_per_g_fine required if pricing_engine != manual_only",
+      "rule": "spot_price_per_g_fine required if shouldManualReview() == false",
       "error_code": "missing_spot_price"
     },
     {
@@ -162,8 +154,8 @@
       "error_code": "invalid_spot_price"
     },
     {
-      "rule": "user_intent not supported by family => continue_with_warning",
-      "warning_code": "unsupported_intent"
+      "rule": "user_intent not supported by family => manual_review",
+      "reason_code": "not_reliably_modelled_for_intent"
     }
   ],
   "normalization_rules": {
@@ -175,7 +167,6 @@
     }
   },
   "rejection_policy": {
-    "on_blocking_error": "reject_input",
-    "on_warning": "allow_with_flag"
+    "on_blocking_error": "reject_input"
   }
 }

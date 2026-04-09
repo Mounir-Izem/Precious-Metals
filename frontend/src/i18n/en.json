@@ -15,13 +15,16 @@
       "semi_stack": "semi-stack",
       "liquidity": "liquidity"
     },
+    "errors": {
+      "unknown_family": "No matching product was found in the catalog.",
+      "unknown_variant": "The specified format or weight does not exist for this product.",
+      "policy_resolution_failed": "This product type is not supported by the evaluation engine.",
+      "missing_thresholds": "No specific evaluation grid is defined for this objective on this product type."
+    },
     "manual_review": {
       "message": "This product cannot be reliably evaluated for this objective."
     },
-    "warnings": {
-      "unsupported_intent": "This objective is not typically associated with this type of product.",
-      "missing_thresholds": "No specific evaluation grid is defined for this objective on this product type."
-    },
+
     "messages": {
       "below_spot": {
         "default": "The price is below the metal value, which is atypical for this type of product."
