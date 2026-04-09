@@ -15,7 +15,7 @@
       "2.0.0"
     ],
     "allowed_catalog_scope": [
-      "invest_stacking_with_collection_sensitivity"
+      "secondary_market_fr_observed"
     ],
     "allowed_base_currency_logic": [
       "spot_relative"
@@ -149,9 +149,9 @@
     "silver-american-eagle-family variant 1oz must preserve gross_weight_g = 31.1030, purity = 0.9990, fine_weight_g = 31.0719, diameter_mm = 40.60",
     "gold-maple-leaf-family variant 1oz must preserve diameter_mm = 30.00",
     "gold-kangaroo-family variant 1oz must preserve diameter_mm = 32.60",
-    "gold-10f-france-family variant napoleon_iii_laure must preserve gross_weight_g = 3.2258, purity = 0.9000, fine_weight_g = 2.9032, diameter_mm = 19.00",
+    "gold-10f-france-investment-family variant napoleon_iii_laure must preserve gross_weight_g = 3.2258, purity = 0.9000, fine_weight_g = 2.9032, diameter_mm = 19.00",
     "gold-50pesos-mex-family variants must preserve gross_weight_g = 41.6666, purity = 0.9000, fine_weight_g = 37.5000, diameter_mm = 37.00",
-    "silver-france-junk-family must include 2f_semeuse, 1f_semeuse, 50c_semeuse",
+    "silver-france-junk-sensitive-family must include 2f_semeuse, 1f_semeuse, 50c_semeuse",
     "silver-panda-family must use pricing_engine = manual_only"
   ],
   "severity_model": {
@@ -173,6 +173,7 @@
       "diameter_missing",
       "high_collection_sensitivity_with_auto_verdict",
       "high_year_sensitivity_with_auto_verdict",
+      "high_condition_sensitivity_with_auto_verdict",
       "aliases_array_too_small",
       "single_variant_family_for_common_bullion_series",
       "missing_reference_media"

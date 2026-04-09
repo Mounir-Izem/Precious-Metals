@@ -244,11 +244,11 @@ Quand aucune règle précédente ne matche proprement.
 Pour éviter qu’un produit parte dans une classification implicite et silencieuse.
 
 ### Conséquence
-Deux options possibles selon ton implémentation future :
-- soit traiter `unknown` comme erreur de moteur
-- soit le faire remonter en `manual_review`
+`unknown` déclenche une **erreur moteur** :
+- `status: error`
+- `code: policy_resolution_failed`
 
-Pour le MVP, il vaut mieux éviter les `unknown` en gardant le catalogue propre.
+Ce n'est pas un état acceptable en production. Si `unknown` apparaît, c'est un bug de catalogue ou une entrée mal formée. Le moteur doit refuser d'évaluer.
 
 ---
 

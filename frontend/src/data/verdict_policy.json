@@ -1,7 +1,7 @@
 {
   "verdict_policy_version": "2.0.0",
-  "policy_scope": "invest_stacking_with_collection_sensitivity",
-  "purpose": "Defines evaluation thresholds, manual review triggers, non-blocking warnings, and explanatory message templates for the price-check engine.",
+  "policy_scope": "secondary_market_fr_observed",
+  "purpose": "Defines evaluation thresholds, manual review triggers, and explanatory message templates for the price-check engine.",
   "positions": [
     "below_spot",
     "within_range_low",
@@ -9,86 +9,48 @@
     "borderline",
     "above_range"
   ],
+  "position_rules": {
+    "logic": [
+      "premium_pct <= 0 => below_spot",
+      "premium_pct <= low_max => within_range_low",
+      "premium_pct <= high_max => within_range_high",
+      "if limit_max exists and premium_pct <= limit_max => borderline",
+      "otherwise => above_range"
+    ]
+  },
   "thresholds": {
     "gold": {
       "bullion": {
-        "stacking": {
-          "low_max": 5,
-          "high_max": 10
-        },
-        "semi_stack": {
-          "low_max": 10,
-          "high_max": 20
-        },
-        "liquidity": {
-          "low_max": 8,
-          "high_max": 15
-        }
+        "stacking":   { "low_max": 5,  "high_max": 9  },
+        "semi_stack": { "low_max": 8,  "high_max": 14 },
+        "liquidity":  { "low_max": 6,  "high_max": 10 }
       },
       "historical_bullion": {
-        "stacking": {
-          "low_max": 10,
-          "high_max": 18
-        },
-        "semi_stack": {
-          "low_max": 15,
-          "high_max": 25
-        },
-        "liquidity": {
-          "low_max": 10,
-          "high_max": 18
-        }
+        "stacking":   { "low_max": 5,  "high_max": 9  },
+        "semi_stack": { "low_max": 8,  "high_max": 14 },
+        "liquidity":  { "low_max": 6,  "high_max": 10 }
       },
       "semi": {
-        "stacking": {
-          "low_max": 15,
-          "high_max": 25
-        },
-        "semi_stack": {
-          "low_max": 25,
-          "high_max": 40
-        }
+        "stacking":   { "low_max": 12, "high_max": 20 },
+        "semi_stack": { "low_max": 20, "high_max": 32 },
+        "liquidity":  { "low_max": 12, "high_max": 20 }
       }
     },
     "silver": {
       "bullion": {
-        "stacking": {
-          "low_max": 10,
-          "high_max": 15
-        },
-        "semi_stack": {
-          "low_max": 15,
-          "high_max": 30
-        },
-        "liquidity": {
-          "low_max": 5,
-          "high_max": 10,
-          "limit_max": 15
-        }
+        "stacking":   { "low_max": 10, "high_max": 18 },
+        "semi_stack": { "low_max": 15, "high_max": 28 },
+        "liquidity":  { "low_max": 10, "high_max": 18, "limit_max": 22 }
       },
       "junk": {
-        "stacking": {
-          "low_max": 0,
-          "high_max": 8
-        },
-        "semi_stack": {
-          "low_max": 8,
-          "high_max": 15
-        },
-        "liquidity": {
-          "low_max": 3,
-          "high_max": 8
-        }
+        "stacking":   { "low_max": 0,  "high_max": 8  },
+        "semi_stack": { "low_max": 8,  "high_max": 15 },
+        "liquidity":  { "low_max": 3,  "high_max": 8  }
       },
       "semi": {
-        "stacking": {
-          "low_max": 20,
-          "high_max": 35
-        },
-        "semi_stack": {
-          "low_max": 30,
-          "high_max": 50
-        }
+        "stacking":   { "low_max": 18, "high_max": 30 },
+        "semi_stack": { "low_max": 25, "high_max": 40 },
+        "liquidity":  { "low_max": 12, "high_max": 20, "limit_max": 25 }
       }
     }
   },
@@ -121,14 +83,11 @@
     ],
     "message_template": "priceCheck.manual_review.message"
   },
-  "warning_rules": {
-    "unsupported_intent": {
-      "behavior": "allow_with_warning",
-      "message_template": "priceCheck.warnings.unsupported_intent"
-    },
+  "error_rules": {
     "missing_thresholds_for_archetype": {
-      "behavior": "allow_with_warning",
-      "message_template": "priceCheck.warnings.missing_thresholds"
+      "behavior": "error",
+      "error_code": "missing_thresholds_for_archetype",
+      "message_template": "priceCheck.errors.missing_thresholds"
     }
   },
   "message_templates": {
@@ -152,6 +111,9 @@
     "below_spot is evaluated before threshold comparison.",
     "Threshold resolution depends on metal, archetype, and intent.",
     "manual_review is a runtime status, not a verdict.",
-    "Warnings are non-blocking and may coexist with evaluated or manual_review."
+    "unsupported_intent leads to status=manual_review with reason_code=not_reliably_modelled_for_intent.",
+    "unknown archetype leads to status=error with code=policy_resolution_failed.",
+    "ask_price is the total lot price, not the unit price.",
+    "Thresholds scope: marché secondaire FR observé — not retail dealer, not primary market, not dynamic."
   ]
 }
